@@ -1,0 +1,105 @@
+﻿@*@model UrestComplaintManagement.Context.AmenitiesBooking*@
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+@{
+    ViewBag.Title = "Service Directory";
+}
+
+<head>
+    <meta name="viewport" content="width =device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="~/Assets/Login.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<br />
+<br />
+<br />
+<h3 style="color:beige;">Service Directory</h3>
+<input type="hidden" id="mobileNo" value="@ViewData["MobileNo"]" />
+
+<div>
+    <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+        @Html.ActionLink("Back", "SocietyDirectory", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+    </p>
+</div>
+
+<div style="color:beige;">
+    <table id="tblData">
+        <thead>
+            <tr>
+                @*<td style="border-style:solid; border-color:beige; border-width:1px; padding:2px;">S/No.</td>*@
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">EMPLOYEE NAME</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">DESIGNATION</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">MOBILE NO</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.ServiceDirecortyData)
+            {
+                <tr style="border-bottom: solid; border-width: 1px; border-color: orange;">
+                    <td style="padding:5px;width:50%;"> @item.EmployeeName</td>
+                    <td style="width:30%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">@item.Designation</div></td>
+                    <td style="width:20%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">@item.MobileNo</div></td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+        @Html.ActionLink("Back", "SocietyDirectory", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+    </p>
+</div>
+
+<script>
+            //$(document).ready(
+    function FillDetails() {
+                    $("#tblData tbody tr").remove();
+        //var bookingDate = document.getElementById("AmenityTime").value;
+        //var mobileNo = $('#mobileNo').val();
+        //            alert(mobileNo);
+
+                    $.ajax({
+            url: "@Url.Action("EmployeeList", "Account")",
+            type: "POST",
+            dataType: "JSON",
+            data: { PropertyID: "0" },
+            success: function (Data) {
+                var Counter = Data.length;
+                for (i = 0; i < Counter; i++) {
+
+                    var
+                    Id = Data[i].Id;
+                    EmployeeName = Data[i].EmployeeName;
+                    Designation = Data[i].Designation;
+                    MobileNo = Data[i].MobileNo;
+
+                    var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: orange;">'
+                            + '<td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">' + EmployeeName + '</div></td><td style="width:30%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">' + Designation + '</div></td><td style="padding:5px; width:20%; text-align:center;">' + MobileNo + '</td>';
+
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                    $('#tblData tbody').append(transaction);
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                }
+
+            }
+        });
+    }
+            //);
+
+
+</script>

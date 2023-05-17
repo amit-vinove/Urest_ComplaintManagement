@@ -1,0 +1,98 @@
+﻿@model UrestComplaintManagement.Context.Ticket
+
+@{
+    ViewBag.Title = "CreateNewTicket";
+}
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div style="color:beige" class="form-horizontal">
+    <h4 style="color:beige">New Ticket</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+        @*<button style="width: 80px; color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</button>*@
+
+        @Html.ActionLink("Back", "Complaint", "Account", new
+        {
+            Mobile = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+    </p>
+
+    <div class="form-group">
+        @Html.Label("Category", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div style="color: black" class="col-md-10">
+            <select style="font: large; width: 1000px; color: black " name="TicketType" id="TicketType">
+
+                @foreach (var item in ViewBag.TicketType)
+                {
+                   <option value=@item.TicketTypeId>@item.Type</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.TicketOrigin, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TicketOrigin, new { htmlAttributes = new { @class = "form-control", @Value = "Property", @ReadOnly = "True" } })
+            @Html.ValidationMessageFor(model => model.TicketOrigin, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextArea("Description", htmlAttributes: new { Style = "color:black; width:1000px" })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Visibility, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div style="color:beige" class="col-md-10">
+            <select style="font: large; width: 1000px; color: black " name="Visibility" id="Visibility">
+                <option value="Community">Community</option>
+                <option value="Personal">Personal</option>
+            </select>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Priority", htmlAttributes: new { @class = "control-label col-md-2" })
+        @*@Html.LabelFor(model => model.TicketPriorityId, htmlAttributes: new { @class = "control-label col-md-2" })*@
+        <div style="color:beige" class="col-md-10">
+            <select style="font: large; width: 1000px; color: black " name="TicketPriorityId" id="TicketPriorityId">
+                <option value="3">High</option>
+                <option value="1">Low</option>
+                <option value="2">Medium</option>
+            </select>
+
+        </div>
+    </div>
+    <input type="hidden" name="MobileNo" value=@ViewData["MobileNo"] />
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" onclick="return alert ('Saved !');"/>
+            @*<button  style="width: 75px; color: black"onclick="location.href='@Url.Action("TicketSuccess", "Account")';return false;">Create</button>*@
+        </div>
+    </div>
+</div>
+}
+
+

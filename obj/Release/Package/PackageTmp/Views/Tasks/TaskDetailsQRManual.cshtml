@@ -1,0 +1,87 @@
+﻿@{
+
+}
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+<br />
+<br />
+<br />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="az-content-body pd-lg-l-40 d-flex flex-column">
+        <h2>QR Code Scaning</h2>
+        <div style="text-align:center; background-color:green; height:40px; vertical-align:central; font-size:large;">
+
+            <input type="submit" value="View" class="btn btn-default"/>
+
+            <input hidden="hidden" id="QRCodeDB" name="QRCodeDB"  value="@ViewData["QRCode"]"/>
+
+            @*@Html.ActionLink("View", "TaskDetailsQRNewFormManual", "Tasks", new
+               {
+                   QRCode = "CommonAreaBathroom",//ScanResults
+                   MobileNo = ViewData["MobileNo"]
+               }, new { @style = "color:yellow;vertical-align:central;font-size:large;" })*@
+
+        </div>
+        <div id="QRBody">
+            <div style="text-align:center;">
+                <input style="color: black; text-align:center; width:100%" type="text" value="@ViewData["Error"]" id="ScanResults" name="ScanResults" />
+            </div>
+        </div>
+
+    </div>
+    }
+
+    <script>
+        function ShowData() {
+            var qrCodeS = $('#ScanResults').val();
+            var qrCodeR = $('#QRCodeR').html();
+
+            if (qrCodeS == qrCodeR) {
+                ShowQRDetail(qrCodeS);
+            }
+            else {
+                alert("Invalid QR Code !");
+                GotoTaskList();
+            }
+        }
+    </script>
+
+    <div id="partialModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="GotoTaskList()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function GotoTaskList() {
+                 document.location =
+    '@Url.Action("TaskList", "Tasks")';
+
+    }
+    </script>
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+    function ShowQRDetail(QRCode) {
+        var url = '@Url.Action("TaskDetailsQRNewForm", "Tasks")?QRCode=' + QRCode;
+        $(function () {
+            window.location=url;
+        });
+    }
+    </script>
+
+

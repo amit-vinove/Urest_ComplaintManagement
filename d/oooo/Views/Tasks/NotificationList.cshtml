@@ -1,0 +1,314 @@
+﻿@model IEnumerable<UrestComplaintManagement.Context.Notification>
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<br />
+<br />
+<br />
+
+<h3 style="color:beige;">Notifications</h3>
+
+<div class="center">
+    <input type="hidden" id="mobileNo" value="@ViewData["MobileNo"]" />
+    <div>
+        @*<div style="text-align:center;"><input type="button" value="Back" class="btn btn-default" style="background-color: #f44336; width:100px;" onclick="history.go(-1);" /></div>*@
+
+        <div>
+            <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+                @Html.ActionLink("Back", "GoHomePage", "Account", new
+                {
+                    MobileNo = ViewData["MobileNo"]
+                },
+                new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+            </p>
+        </div>
+
+        <div class="az-content-body pd-lg-l-40 d-flex flex-column" id="divPageContent">
+            <div class="wd-sm-300">
+                <div class="d-md-flex mg-b-20" style="color:beige;">
+                    <div class="form-group" style="border:solid; border-width:1px; border-color:beige; padding:5px; width:100%;">
+                        <table id="tblData">
+                            <thead>
+                                <tr style="border: solid; border-width: 1px; border-color: beige;">
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>
+                                        Subject
+                                    </th>
+                                    <th>
+                                        Message
+                                    </th>
+                                    <th>
+                                        Expiry
+                                    </th>
+                                    @*<th>
+                                        Action
+                                    </th>*@
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @{
+                                    var j = 0;
+                                }
+
+                                @if (Model.ToList().Count > 0)
+                                {
+                                    foreach (var item in Model.Select((x, i) => new { Data = x, Index = i }))
+                                    {
+                                        <tr style="border-bottom: solid; border-width: 1px; border-color: orange;">
+                                            <td style="padding:5px;width:10%;">@item.Data.CrOnStr</td>
+                                            <td style="width:20%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">@item.Data.Subject</div></td>
+                                            <td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">@item.Data.Message</div></td>
+                                            <td style="padding:5px; width:15%;">@item.Data.ExDtStr</td>
+                                            @*<td><button class="btn btn-sm btn-warning" title="View" onclick="ShowDetails(@item.Data.NotificationId)"><i class="fa fa-eye fa-fw"></i></button></td>*@
+                                            <td><input type="hidden" id="taskID_@j" value="@item.Data.NotificationId" /></td>
+                                        </tr>
+
+                                        j = j + 1;
+
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div style="text-align:center;"><input type="button" value="Back" class="btn btn-default" style="background-color: #f44336; width:100px;" onclick="history.go(-1);" /></div>*@
+
+        <div>
+            <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+                @Html.ActionLink("Back", "GoHomePage", "Account", new
+                {
+                    MobileNo = ViewData["MobileNo"]
+                },
+                new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+            </p>
+        </div>
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+        <script>
+
+        function formatDate(date) {
+            alert(padTo2Digits(date.getDate()));
+
+            return [
+                padTo2Digits(date.getDate()),
+                padTo2Digits(date.getMonth() + 1),
+                date.getFullYear(),
+            ].join('/');
+        };
+
+        //$(document).ready(
+            function FillDetails() {
+                $("#tblData tbody tr").remove();
+                var mobileNo = $('#mobileNo').val();
+
+        $.ajax({
+            url: "@Url.Action("NotificationData", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+            data: { MobileNo: mobileNo },
+            success: function (Data) {
+                var Counter = Data.length;
+                for (i = 0; i < Counter; i++) {
+                    var
+                        NotificationId = Data[i].NotificationId;
+                        CreatedOn = Data[i].CreatedOn;
+                    Subject = Data[i].Subject;
+                    Message = Data[i].Message;
+                    ExpirtyDate = Data[i].ExpirtyDate;
+                    IsRead = Data[i].IsRead;
+                    CrOnStr = Data[i].CrOnStr;
+                    ExDtStr = Data[i].ExDtStr;
+
+                    var icoClass = "fa fa-spinner fa-spin fa-fw";
+                    if (IsRead == 1)
+                    { icoClass = "fa fa-eye fa-fw"; }
+
+                    var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: orange;" ><td style="padding:5px;width:15%;">' + CrOnStr + '</td><td style="width:20%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">' + Subject + '</div></td><td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">' + Message + '</div></td><td style="padding:5px; width:15%;">' + ExDtStr + '</td><td><button class="btn btn-sm btn-warning" title="View" onclick="ShowDetails(' + NotificationId + ',' + '' + ')"><i class="' + icoClass + '"></i></button></td><td><input id="taskID_' + i + '" value = ' + NotificationId + ' type="hidden" /> </td></tr>';
+
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                    $('#tblData tbody').append(transaction);
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                }
+
+            }
+        });
+    }
+        //);
+        function FillDetails0() {
+            $("#tblData tbody tr").remove();
+            var mobileNo = $('#mobileNo').val();
+        $.ajax({
+            url: "@Url.Action("NotificationData", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+            data: { MobileNo: mobileNo },
+            success: function (Data) {
+                var Counter = Data.length;
+                for (i = 0; i < Counter; i++) {
+                    var
+                        NotificationId = Data[i].NotificationId;
+                        CreatedOn = Data[i].CreatedOn;
+                    Subject = Data[i].Subject;
+                    Message = Data[i].Message;
+                    ExpirtyDate = Data[i].ExpirtyDate;
+                    IsRead = Data[i].IsRead;
+                    CrOnStr = Data[i].CrOnStr;
+                    ExDtStr = Data[i].ExDtStr;
+
+                    var icoClass = "fa fa-spinner fa-spin fa-fw";
+                    if (IsRead == 1)
+                    { icoClass = "fa fa-eye fa-fw"; }
+
+                    var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: orange;" ><td style="padding:5px;width:15%;">' + CrOnStr + '</td><td style="width:20%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">' + Subject + '</div></td><td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">' + Message + '</div></td><td style="padding:5px; width:15%;">' + ExDtStr + '</td><td><button class="btn btn-sm btn-warning" title="View" onclick="ShowDetails(' + NotificationId + ',' + '' + ')"><i class="' + icoClass + '"></i></button></td><td><input id="taskID_' + i + '" value = ' + NotificationId + ' type="hidden" /> </td></tr>';
+
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                    $('#tblData tbody').append(transaction);
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                }
+
+            }
+        });
+    }
+
+    function SaveData() {
+        var CategoryId = $('#CategoryId').val();
+        var SubCategoryId = $('#SubCategoryId').val();
+        var jsonArr = [];
+        var table = document.getElementById("tblDataQuest");
+
+        var Occurance = $('#Occurance').val();
+        if (Occurance == "0")
+        { Occurance = "Weekly"; }
+        else if (Occurance == "2")
+        { Occurance = "Monthly"; }
+        else { Occurance = "Daily"; }
+
+        var transactionDate0 = "";
+        var transactionID0 = "";
+        var taskName0 = "";
+        var occurance0 = "";
+        var qustID0 = "";
+        var action0 = "";
+        var remarks0 = "";
+
+        transactionDate0 = document.getElementById("transDate").value;
+        taskName0 = $('#taskName').html();
+        occurance0 = Occurance;
+        occurance0 = occurance0.substring(0, 1);
+
+        for (let i in table.rows) {
+            let row = table.rows[i];
+
+            if (i<=3) { continue; }
+            if (row.innerText == undefined)
+            { continue; }
+
+            var getval = $('#index_' + (i - 4)).is(":checked");
+            //alert(getval + ", row:" + (i-4));
+            action0 = "No";
+            if (getval) {
+                action0 = "Yes";
+            }
+
+            qustID0 = $('#questID_' + (i - 4)).html();
+            remarks0 = $(row).find("td:eq(2) input[type='text']").val();
+            //alert("remarks row : " + i + " : " + remarks0 + ", questID : " + qustID0);
+
+            transactionID0 = $('#transactionID_' + (i - 4)).html();
+
+            jsonArr.push({
+                TransactionDate: transactionDate0,
+                TransactionID: transactionID0,
+                CategoryID: CategoryId,
+                SubCategoryID: SubCategoryId,
+                TaskName: taskName0,
+                QuestID: qustID0,
+                Occurance: occurance0,
+                Action: action0,
+                Remarks: remarks0
+            });
+
+            //    for (let j in row.cells) {
+            //        let col = row.cells[j]
+            //    }
+
+            // alert("row: " + i + ' end');
+        };
+
+        $.ajax({
+            url: "@Url.Action("SaveTaskWiseTran", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+            data: { taskWiseTransaction: jsonArr },
+            success: function (Data) {
+                alert("Saved Done !");
+            }
+        });
+
+        alert("Saved !");
+        $("#tblDataQuest").attr("hidden", true);
+        FillDetails();
+
+        ClosePopUp();
+
+          @*$.ajax({
+            url: "@Url.Action("Signin", "Account")",
+            type: "GET",
+            dataType: "JSON",
+            data: { },
+            success: function (Data) {
+                alert("Saved Done !");
+            }
+          });*@
+    }
+        </script>
+    </div>
+</div>
+
+<div id="partialModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @*<div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>*@
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="FillDetails0();" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ShowDetails(notiID) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("NotiDetails", "Tasks")",
+            data: '{notiID: "' + notiID + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#partialModal").find(".modal-body").html(response);
+                $("#partialModal").modal('show');
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+</script>

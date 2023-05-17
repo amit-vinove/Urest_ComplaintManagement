@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "EmergencyDirectory";
+}
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+<br />
+<br />
+<br />
+
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+    @Html.ActionLink("Back", "SocietyDirectory", "Account", new
+    {
+        Mobile = ViewData["MobileNo"]
+    },
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+</p>
+
+
+<h2 style="color:beige">EmergencyDirectory</h2>
+<p style="color:beige">EMERGENCY HELPLINE NUMBER ALL OVER INDIA</p>
+<br />
+<table style="color:beige">
+    <tr>
+        <th>Emergency Helpline</th>
+        <th>Contact Details</th>
+
+    </tr>
+    <tr>
+        <td>National emergency number &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>112</td>
+    </tr>
+
+    <tr>
+        <td>Police &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>100</td>
+    </tr>
+    <tr>
+        <td>Fire &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>101</td>
+    </tr>
+    <tr>
+        <td>Ambulance &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>102</td>
+    </tr>
+    <tr>
+        <td>Disaster Management &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>108</td>
+    </tr>
+    <tr>
+        <td>Women Helpline &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>1091</td>
+    </tr>
+    <tr>
+        <td>Traffic Help &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>1073</td>
+    </tr>
+    <tr>
+        <td>Railways Enquiry &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </td>
+        <td>131/135</td>
+    </tr>
+
+</table>
+

@@ -1,0 +1,153 @@
+﻿@model IEnumerable<UrestComplaintManagement.Context.TaskTransactionModel>
+
+@{
+    int j = 0;
+    Boolean rEnable = true;
+}
+
+@using (Html.BeginForm("SaveTaskWiseTran", "Category"))
+{
+    <div class="details" style="color:beige;">
+        <div>
+            @foreach (var item in Model.Select((x, i) => new { Data = x, Index = i }))
+            {
+                <div id="divOrderItems" style="color:beige;">
+                    <label>Category / SubCategory : </label> @Html.DisplayFor(modelItem => item.Data.CategoryName) <br />
+                    <label>Task Name / Description : </label> @Html.DisplayFor(modelItem => item.Data.Name) &nbsp; &nbsp; &nbsp; &nbsp; <br />
+                    <label>Occurance : </label> @Html.DisplayFor(modelItem => item.Data.Occurence)<br />
+
+                    <div>
+                        <label>Action : </label>
+                        Yes
+                        <input checked="checked" id="index_@j" name="Gender_@j" type="radio" value="Yes"
+                               onChange="GetRadioValue(@j)" />
+                        No<input id="index_@j" name="Gender_@j" type="radio" value="No"
+                                 onChange="GetRadioValue(@j)" />
+                    </div>
+                    <div>
+                        <input id="Remarks_@j" type="text" hidden="@rEnable" style="width:350px; color:beige;" value="@item.Data.TaskCategoryId" />
+                        @*@Html.TextBoxFor(modelItem => item.Data.Remarks)*@
+                    </div>
+                    <br />
+                </div>
+                j++;
+            }
+        </div>
+
+    </div>
+    <div>
+        <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0" style="color:black;">
+            <input type="submit" value="Submit" class="btn btn-default" onclick="return alert ('Saved !');" />
+
+            <input type="hidden" value="transDate kuyuiyi" name="transDate" />
+            <input type="hidden" value="catID lkjkljklmmiuy" name="catID" />
+            <input type="hidden" value="subCatID iouoiuoiuo" name="subCatID" />
+            <input type="hidden" value="remarks dsfsdfsdfs" name="remarks" />
+            <input type="hidden" value="taskName iouulk;l" name="taskName" />
+            <input type="hidden" value="occurance dsfsdfsdfs" name="occurance" />
+            <input type="hidden" value="action dsfsdfsdfs" name="action" />
+
+        </div>
+    </div>
+}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+<script>
+    //// $(document).bind("load", function () {
+    //$(document).ready(function () {
+    //    $('#CategoryId').empty();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Category/GetCategory",
+    //        cache: false,
+    //        datatype: "JSON",
+    //        success: function (data) {
+    //            var CreatedData = data;
+    //            $("#CategoryId").append(" <option label=Choose one></option>");
+    //            for (var i = 0; i < CreatedData.length; i++) {
+    //                var opt = new Option(CreatedData[i].Text, CreatedData[i].Value);
+    //                $('#CategoryId').append(opt);
+    //            }
+    //            $("#CategoryId > [value=0]").attr("selected", "true");
+    //        }
+    //    });
+    //});
+    //$('#CategoryId').change(function () {
+    //    $('#CategoryName').val($('#CategoryId option:selected').text());
+    //});
+    //function FillSubCategory() {
+    //    $('#SubCategoryId').empty();
+    //    var ctr = 0;
+    //    var Cat = "";
+    //    var CategoryId = $('#CategoryId').val();
+
+    //    $.ajax({
+    //        url: "/Category/GetSubCategory",
+    //        type: "GET",
+    //        dataType: "JSON",
+    //        data: { CategoryId: CategoryId },
+    //        success: function (Data) {
+    //            var Counter = Data.length;
+    //            var CreatedData = Data;
+    //            $("#SubCategoryId").append(" <option label=Choose one></option>");
+    //            for (var i = 0; i < CreatedData.length; i++) {
+    //                var opt = new Option(CreatedData[i].Text, CreatedData[i].Value);
+    //                $('#SubCategoryId').append(opt);
+
+    //            }
+
+    //        }
+    //    });
+    //}
+    //$('#SubCategoryId').change(function () {
+    //    $('#SubCategoryName').val($('#SubCategoryId option:selected').text());
+    //});
+    function GetRadioValue(id) {
+        // var getchecked = $('#index_' + id).val();
+        var getval = $('#index_' + id).is(":checked");
+        /*alert(getchecked + id + '_' + getval);*/
+        if (getval) {
+            $('#Remarks_' + id).val('');
+            //$('#Remarks_' + id).prop("disabled", true);
+            $('#Remarks_' + id).hide();
+
+        } else {
+            $('#Remarks_' + id).prop("disabled", false);
+            $('#Remarks_' + id).show();
+        }
+    }
+    //function FillDetails() {
+    //    $("#orderdetailsItems tbody tr").remove();
+    //    var ctr = 0;
+    //    var CategoryId = $('#CategoryId').val();
+    //    var SubCategoryId = $('#SubCategoryId').val();
+    //    if (CategoryId == "") {
+    //        CategoryId = 0;
+    //    }
+    //    if (SubCategoryId == "") {
+    //        SubCategoryId = 0;
+    //    }
+
+    //    $.ajax({
+    //        url: '/Category/GetTaskTransaction',
+    //        type: "POST",
+    //        dataType: "JSON",
+    //        data: { CategoryId: CategoryId, SubCategoryId: SubCategoryId },
+    //        success: function (Data) {
+    //            var Counter = Data.length;
+    //            for (i = 0; i < Counter; i++) {
+    //                var
+    //                    CategoryName = Data[i].CategoryName;
+    //                Name = Data[i].Name;
+    //                Occurence = Data[i].Occurence;
+    //                Remarks = Data[i].Remarks;
+    //                var transaction = '<tr style="border:single" ><td>' + CategoryName + '</td><td>' + Name + '</td><td >' + Occurence + '</td><td >Yes <input checked="checked" id="index_' + i + '" name="Gender' + i + '" type="radio" value="Yes"  onChange="GetRadioValue(' + i + ')" /> No <input  id="index_' + i + '" name="Gender' + i + '" type="radio" value="No"  onChange="GetRadioValue(' + i + ')" /></td></tr>';
+    //                var transaction0 = '<tr style="border:none" ><td colspan="4" style="text-align:right"><input id="Remarks_' + i + '" type="text" disabled="true" style="width:500px; color:black;" value=' + Remarks + '></td></tr>';
+    //                $('#orderdetailsItems tbody').append(transaction);
+    //                $('#orderdetailsItems tbody').append(transaction0);
+    //            }
+
+    //        }
+    //    });
+    //}
+</script>

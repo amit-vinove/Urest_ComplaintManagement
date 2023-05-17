@@ -1,0 +1,161 @@
+﻿@model IEnumerable <UrestComplaintManagement.Context.TaskTransactionModel>
+
+@{ 
+    int j = 0;
+    string catIdd = "";
+    string subCatIdd = "";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+
+<h2>Task Checklist</h2>
+<div class="az-content-body pd-lg-l-40 d-flex flex-column">
+    <div class="wd-sm-300">
+        <div class="d-md-flex mg-b-20" style="color:beige;">
+            <label class="form-label">Category Name: <span class="tx-danger"></span></label>
+            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                <select class="form-control wd-xl-250 select2" name="CategoryId" id="CategoryId" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" required onchange=" FillSubCategory()">
+                    <option label="Choose one"></option>
+                    @foreach (var cat in Model.ToList()[0].categories.ToList())
+                    {
+                        <option value="@cat.Id">@cat.name</option>
+                    }
+                </select>
+            </div>
+            <input type="hidden" name="CategoryName" runat="server" id="CategoryName" />
+            <div id="slErrorContainer55"></div>
+
+            <label class="form-label">Sub-Category: <span class="tx-danger"></span></label>
+            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                <select class="form-control wd-xl-250 select2" name="SubCategoryId" id="SubCategoryId" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" required>
+                    <option label="Choose one"></option>
+                </select>
+            </div>
+            <input type="text" name="SubCategoryName" id="SubCategoryName" class="form-control wd-250" style="display:none" />
+            <div id="slErrorContainer55"></div>
+
+            <br />
+            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0" style="color:black;">
+                <p style=" color: beige; width: 100px; height: 20px; background-color: beige; text-align:center;">
+                    @Html.ActionLink("Show Data", "TaskTransactionRefresh", "Category", new
+                       {
+                            catId = ViewData["CategoryID"] + "1",
+                            subCatID = ViewData["SubCategoryID"] + "1"
+                       },
+                    new { @style = "color: black; background-color: beige; font-weight: bold" })
+                </p>
+            </div>
+            <div class="form-group">
+                @{
+                    Html.RenderPartial("TaskTransactionData");
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+<script>
+    //// $(document).bind("load", function () {
+    //$(document).ready(function () {
+    //    $('#CategoryId').empty();
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Category/GetCategory",
+    //        cache: false,
+    //        datatype: "JSON",
+    //        success: function (data) {
+    //            var CreatedData = data;
+    //            $("#CategoryId").append(" <option label=Choose one></option>");
+    //            for (var i = 0; i < CreatedData.length; i++) {
+    //                var opt = new Option(CreatedData[i].Text, CreatedData[i].Value);
+    //                $('#CategoryId').append(opt);
+    //            }
+    //            $("#CategoryId > [value=0]").attr("selected", "true");
+    //        }
+    //    });
+    //});
+    $('#CategoryId').change(function () {
+        var id = $('#CategoryId option:selected').text();
+        $('#CategoryName').val($('#CategoryId option:selected').text());
+        alert(id);
+    });
+    function FillSubCategory() {
+        $('#SubCategoryId').empty();
+        var ctr = 0;
+        var Cat = "";
+        var CategoryId = $('#CategoryId').val();
+        //alert(CategoryId);
+
+        $.ajax({
+            url: "/Category/GetSubCategory",
+            type: "GET",
+            dataType: "JSON",
+            data: { CategoryId: CategoryId },
+            success: function (Data) {
+                var Counter = Data.length;
+                var CreatedData = Data;
+                $("#SubCategoryId").append(" <option label=Choose one></option>");
+                for (var i = 0; i < CreatedData.length; i++) {
+                    var opt = new Option(CreatedData[i].Text, CreatedData[i].Value);
+                    $('#SubCategoryId').append(opt);
+
+                }
+
+            }
+        });
+    }
+    $('#SubCategoryId').change(function () {
+        $('#SubCategoryName').val($('#SubCategoryId option:selected').text());
+    });
+
+    //function GetRadioValue(id) {
+    //    // var getchecked = $('#index_' + id).val();
+    //    var getval = $('#index_' + id).is(":checked");
+    //       /*alert(getchecked + id + '_' + getval);*/
+    //    if (getval) {
+    //        $('#Remarks_' + id).val('');
+    //        $('#Remarks_' + id).prop("disabled", true);
+
+    //    } else {
+    //        $('#Remarks_' + id).prop("disabled", false);
+    //    }
+    //}
+
+    function FillDetails() {
+        $("#orderdetailsItems tbody tr").remove();
+        var ctr = 0;
+        var CategoryId = $('#CategoryId').val();
+        var SubCategoryId = $('#SubCategoryId').val();
+        if (CategoryId == "") {
+            CategoryId = 0;
+        }
+        if (SubCategoryId == "") {
+            SubCategoryId = 0;
+        }
+
+        $.ajax({
+            url: '/Category/GetTaskTransaction',
+            type: "POST",
+            dataType: "JSON",
+            data: { CategoryId: CategoryId, SubCategoryId: SubCategoryId },
+            success: function (Data) {
+                var Counter = Data.length;
+                for (i = 0; i < Counter; i++) {
+                    var
+                        CategoryName = Data[i].CategoryName;
+                    Name = Data[i].Name;
+                    Occurence = Data[i].Occurence;
+                    Remarks = Data[i].Remarks;
+                    var transaction = '<tr style="border:single" ><td>' + CategoryName + '</td><td>' + Name + '</td><td >' + Occurence + '</td><td >Yes <input checked="checked" id="index_' + i + '" name="Gender' + i + '" type="radio" value="Yes"  onChange="GetRadioValue(' + i + ')" /> No <input  id="index_' + i + '" name="Gender' + i + '" type="radio" value="No"  onChange="GetRadioValue(' + i + ')" /></td></tr>';
+                    var transaction0 = '<tr style="border:none" ><td colspan="4" style="text-align:right"><input id="Remarks_' + i + '" type="text" disabled="true" style="width:500px; color:black;" value=' + Remarks + '></td></tr>';
+                    $('#orderdetailsItems tbody').append(transaction);
+                    $('#orderdetailsItems tbody').append(transaction0);
+                }
+
+            }
+        });
+    }
+</script>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<UrestComplaintManagement.Context.PropertyOwnerDetails>
+
+@{
+    ViewBag.Title = "TowerDetail";
+}
+
+<h2>TowerDetail</h2>
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+    @Html.ActionLink("Back", "GetAllTowers", "Account", new
+    {
+        MobileNo = ViewData["MobileNo"]
+    },
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+</p>
+
+<h2 style="color:beige">ResidentDirectory</h2>
+
+<p style="color:beige">Edit your community profile <button style="color: black; background-color: #f44336; font-weight:bold">Edit Profile</button></p>
+<br />
+<a href="#" class="next" style="color:beige">Management Commitee &raquo;</a>
+<br />
+<br />
+
+<p style="color:beige">BUILDINGS</p>
+<br />
+
+
+@foreach (var item in Model)
+{
+
+    <button>
+        @Html.DisplayFor(modelItem => item.name)
+    </button>
+    <button>
+        @Html.DisplayFor(modelItem => item.Resident)
+    </button>
+    <br />
+    <br />
+
+
+}
+
+
+

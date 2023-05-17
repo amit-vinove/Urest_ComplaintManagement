@@ -1,0 +1,313 @@
+﻿<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+@{
+    ViewBag.Title = "KYC";
+    var kycID = "";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<br />
+<br />
+<br />
+<h3 style="color:beige;">KYC</h3>
+
+@using (Html.BeginForm("CreateKYC", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (ViewBag.Saved != "1")
+    {
+        <span id="responseMsg" style="color:red;">@ViewBag.Response</span>
+    }
+    else
+    {
+        <span id="responseMsg" style="color:beige;">@ViewBag.Response</span>
+    }
+
+    <br />
+    <input type="hidden" id="MobileNo" name="MobileNo" value="@ViewData["MobileNo"]" />
+
+    <div>
+        <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+            @Html.ActionLink("Back", "GoHomePage", "Account", new
+            {
+                MobileNo = ViewData["MobileNo"]
+            },
+            new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+        </p>
+    </div>
+    <div class="az-content-body pd-lg-l-40 d-flex flex-column" id="divPageContent">
+        <div class="wd-sm-300">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @{
+                var Id = ""; var empId = ""; var empName = ""; var gender = ""; var jobProfile = ""; var idDoc = "";
+
+                if (ViewBag.KycDetailsList != null)
+                {
+                    foreach (var item in ViewBag.KycDetailsList)
+                    {
+                        Id = (ViewBag.KycDetailsList)[0].Id.ToString();
+                        empId = (ViewBag.KycDetailsList)[0].EmployeeId;
+                        empName = (ViewBag.KycDetailsList)[0].EmployeeName;
+                        gender = (ViewBag.KycDetailsList)[0].Gender;
+                        jobProfile = (ViewBag.KycDetailsList)[0].JobProfile;
+                        idDoc = (ViewBag.KycDetailsList)[0].IdDoc;
+                        kycID = Id;
+                    }
+                }
+            }
+
+            <table>
+                <tr>
+                    <td>
+                        <div style="width:48%">
+                            <table>
+                                <tr>
+                                    <td colspan="3">
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Employee Id: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <input value="@empId" type="text" id="EmployeeId" name="EmployeeId" style="color:black;" />
+                                                <input value="@Id" hidden="hidden" type="text" id="Id" name="Id" style="color:black;" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Employee Name: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <input type="text" value="@empName" id="EmployeeName" name="EmployeeName" style="color:black;" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Gender: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <select class="form-control wd-xl-250 select2" name="Gender" id="Gender" data-placeholder="Choose one" data-parsley-class-handler="#lnId"
+                                                        data-parsley-errors-container=" #slerrorcontainer55" style="text-align:left;" required onchange="">
+                                                    <option label="Gender"></option>
+                                                    @if (gender == "Male")
+                                                    {
+                                                        <option label="Male" selected value="Male"></option>
+                                                        <option label="Female" value="Female"></option>
+                                                    }
+                                                    else if (gender == "Female")
+                                                    {
+                                                        <option label="Male" value="Male"></option>
+                                                        <option label="Female" selected value="Female"></option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option label="Male" value="Male"></option>
+                                                        <option label="Female" value="Female"></option>
+                                                    }
+                                                </select>
+                                                <div id="slErrorContainer55"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Job Profile: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <input type="text" id="JobProfile" name="JobProfile" value="@jobProfile" style="color:black;" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">ID Document: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <select class="form-control wd-xl-250 select2" name="IdDoc" id="IdDoc" data-placeholder="Choose one" data-parsley-class-handler="#lnId" style="width:150px;"
+                                                        data-parsley-errors-container=" #slerrorcontainer55" style="text-align:left;" required onchange="">
+                                                    <option label="Choose one"></option>
+                                                    @if (idDoc == "Adhaar Card")
+                                                    {
+                                                        <option label="Adhaar Card" selected value="Adhaar Card"></option>
+                                                        <option label="PAN" value="PAN"></option>
+                                                        <option label="Voter ID" value="Voter ID"></option>
+                                                        <option label="DL" value="DL"></option>
+                                                    }
+                                                    else if (idDoc == "PAN")
+                                                    {
+                                                        <option label="Adhaar Card" value="Adhaar Card"></option>
+                                                        <option label="PAN" selected value="PAN"></option>
+                                                        <option label="Voter ID" value="Voter ID"></option>
+                                                        <option label="DL" value="DL"></option>
+                                                    }
+                                                    else if (idDoc == "Voter ID")
+                                                    {
+                                                        <option label="Adhaar Card" value="Adhaar Card"></option>
+                                                        <option label="PAN" value="PAN"></option>
+                                                        <option label="Voter ID" selected value="Voter ID"></option>
+                                                        <option label="DL" value="DL"></option>
+                                                    }
+                                                    else if (idDoc == "DL")
+                                                    {
+                                                        <option label="Adhaar Card" value="Adhaar Card"></option>
+                                                        <option label="PAN" value="PAN"></option>
+                                                        <option label="Voter ID" value="Voter ID"></option>
+                                                        <option label="DL" selected value="DL"></option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option label="Adhaar Card" value="Adhaar Card"></option>
+                                                        <option label="PAN" value="PAN"></option>
+                                                        <option label="Voter ID" value="Voter ID"></option>
+                                                        <option label="DL" value="DL"></option>
+                                                    }
+                                                </select>
+                                                <div id="slErrorContainer55"></div>
+
+                                                <div style="width:100px; color:beige;">
+                                                    <input type="text" id="IdDocNo" name="IdDocNo" hidden="hidden" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Document Image: <span class="tx-danger"></span></label>
+
+                                            <div style="width:100px; color:beige;">
+                                                <input type="file" accept="image/*" id="ImageData" name="ImageData" />
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width:2%"></div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+
+            <input type="hidden" name="MobileNo" value=@ViewData["MobileNo"] />
+            <div class="form-group">
+                <div>
+                    @{ bool kycApproved = false; }
+                    @if (ViewBag.KycDetailsList != null)
+                    {
+                        foreach (var item in ViewBag.KycDetailsList)
+                        {
+                            if (item.Approved == 1)
+                            {
+                                kycApproved = true;
+                            }
+                        }
+                    }
+                    @*@if (!kycApproved)
+                        {
+                            <br />
+                            <input type="submit" value="Save" class="btn btn-default" style=" width:100px; background-color:green; color:black; font-weight:bolder;" />
+                        }*@
+                    <br />
+                    <input type="submit" value="Save" class="btn btn-default" style=" width:100px; background-color:green; color:black; font-weight:bolder;" />
+                    &nbsp;
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div style="color:beige;">
+    <table id="tblData">
+        <thead>
+            <tr>
+                <td style="border-style:solid; border-color:beige; border-width:1px; padding:2px;">Emp. ID</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">Emp. Name</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">Gender</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">Profile</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px; float: right;">Approved</td>
+            </tr>
+        </thead>
+        <tbody>
+            @using UrestComplaintManagement.Helpers;
+
+            @if (ViewBag.KycDetailsList == null) { }
+            else
+            {
+                foreach (var item in ViewBag.KycDetailsList)
+                {
+                    <tr style="border-bottom: solid; border-width: 1px; border-color: orange;">
+                        <td style="padding:5px;width:20%;"> @item.EmployeeId</td>
+                        <td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">@item.EmployeeName</div></td>
+                        <td style="width:30%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">@item.Gender</div></td>
+                        <td style="padding:5px; width:10%; text-align:center;"> @item.JobProfile</td>
+
+                        @if (item.Approved == 0)
+                        {
+                            @*<td style="text-align:center;">
+                @Html.ActionLink("X", "DeleteKyc", "Account", new { id = @item.Id, MobileNo = ViewData["MobileNo"] }, new { @style = "color: red; text-align:center;", @class = "fa fa - trash" })
+            </td>*@
+
+                            <td style="text-align:center;"><div style="color:beige;">No</div></td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center;"><div style="color:beige;">Yes</div></td>
+                        }
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <div style="text-align:center;">
+        @if (Convert.ToInt32(kycID) > 0)
+        {
+            <img id="output" style="height:300px; width:300px;" alt="" src="@Url.Action("RetrieveImage", "Account", new { kycId = kycID })" />
+        }
+        else
+        { 
+            <img id="output" style="height:300px; width:300px;" hidden="hidden" alt="" src="@Url.Action("RetrieveImage", "Account", new { kycId = kycID })" />
+        }
+
+        <script>
+            const fileInput = document.getElementById('ImageData');
+
+            fileInput.addEventListener('change', (e) =>
+                doSomethingWithFiles(e.target.files),
+            );
+
+            const output = document.getElementById('output');
+            function doSomethingWithFiles(fileList) {
+                let file = null;
+
+                for (let i = 0; i < fileList.length; i++) {
+                    if (fileList[i].type.match(/^image\//)) {
+                        file = fileList[i];
+                        break;
+                    }
+                }
+
+                if (file !== null) {
+                    output.src = URL.createObjectURL(file);
+                    output.hidden = false;
+                }
+            }
+        </script>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function fileCheck(obj) {
+        var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+        if ($.inArray($(obj).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            alert("Only '.jpeg','.jpg', '.png', '.gif', '.bmp' formats are allowed.");
+        }
+    }
+</script>

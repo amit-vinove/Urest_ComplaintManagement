@@ -1,0 +1,154 @@
+﻿@{
+    Layout = "";
+}
+<head>
+    @*<link rel="stylesheet" href="~/Assets/Login.css">*@
+</head>
+<br />
+<br />
+<br />
+<div class="az-content-body pd-lg-l-40 d-flex flex-column">
+    <h2>QR Code Scaning</h2>
+    <div style="text-align:center;">
+        <button style="background-color: darkgreen; color: white; width: 100%;" onclick=ShowData()>View</button>
+        <span hidden="hidden" id="QRCodeR">@ViewData["QRCode"]</span>
+    </div>
+
+    <div id="QRBody">
+        <div style="text-align:center;">
+            <div style="color:beige;" id="qr-reader-results" hidden="hidden"></div>
+            <input style="color: black; text-align:center; width:100%" type="text" id="ScanResults" />
+        </div>
+        <div id="qr-reader" color:darkblue; style="width:100%; height:100%;">
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/html5-qrcode.min.js"></script>
+@*<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>*@
+<script>
+    function docReady(fn) {
+        // see if DOM is already available
+        if (document.readyState === "complete"
+            || document.readyState === "interactive") {
+            // call on next available tick
+            setTimeout(fn, 1);
+        } else {
+            document.addEventListener("DOMContentLoaded", fn);
+        }
+    }
+
+    docReady(function () {
+        var resultContainer = document.getElementById('qr-reader-results');
+        var resultContainerT = document.getElementById('ScanResults');
+        var lastResult, countResults = 0;
+
+        ////****** Running Code ************************************************************************
+        resultContainerT.value = "";
+        // This method will trigger user permissions
+        Html5Qrcode.getCameras().then(devices => {
+            /**
+             * devices would be an array of objects of type:
+             * { id: "id", label: "label" }
+             */
+            if (devices && devices.length) {
+                var cameraId = devices[1].id;
+                // .. use this to start scanning.
+
+                const html5QrCode = new Html5Qrcode(/* element id */ "qr-reader");
+                html5QrCode.start(
+                    cameraId,
+                    {
+                        fps: 100,    // Optional, frame per seconds for qr code scanning
+                        qrbox: { width: 250, height: 250 }  // Optional, if you want bounded box UI
+                    },
+                    (decodedText, decodedResult) => {
+                        // do something when code is read
+                        resultContainerT.value = decodedText;
+                        ShowData();
+                        html5QrCode.stop();
+                        html5QrCode = nothing;
+                    },
+                    (errorMessage) => {
+                        // parse error, ignore it.
+                    })
+                    .catch((err) => {
+                        // Start failed, handle it.
+                    });
+
+                html5QrCode.stop();
+                html5QrCode = null;
+            }
+        }).catch(err => {
+            // handle err
+        });
+    })
+
+    function ShowData() {
+        var qrCodeS = $('#ScanResults').val();
+        var qrCodeR = $('#QRCodeR').html();
+
+        if (qrCodeS == qrCodeR) {
+            ShowTaskDetails(qrCodeS);
+            $('#QRBody').prop("hidden", true);
+        }
+        else {
+            alert("Invalid QR Code !");
+            GotoTaskList();
+        }
+    }
+</script>
+
+<div id="partialModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="GotoTaskList()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function GotoTaskList() {
+    //alert("Task List Rendering ...")
+
+                 document.location =
+    '@Url.Action("TaskTransaction", "Tasks")';
+
+    }
+</script>
+
+@*<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>*@
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    function ShowTaskDetails(QRCode) {
+        //alert("Show details: " + QRCode);
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("TaskDetailsQR", "Tasks")",
+            data: '{QRCode: "' + QRCode + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#partialModal").find(".modal-body").html(response);
+                $("#partialModal").modal('show');
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+</script>
+
+
+

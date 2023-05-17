@@ -1,0 +1,130 @@
+﻿@model IEnumerable<UrestComplaintManagement.Context.Ticket>
+
+@{
+    ViewBag.Title = "Complaint";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+    <link rel="stylesheet" href="~/Assets/rating.css">
+</head>
+
+<br />
+<br />
+<br />
+
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:3px;">
+    @*<a style="color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</a>*@
+
+    @Html.ActionLink("Back", "GoHomePage", "Account", new
+{
+    MobileNo = ViewData["MobileNo"]
+},
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+</p>
+
+<h4 style="align-content: center; font-weight: bold; color: darkgrey">@ViewBag.Name <br />Flate No.: @ViewBag.FlatDetail</h4>
+<hr />
+@Html.ActionLink("+ Create New Ticket", "CreateNewTicket", "Account",    new
+{
+    MobileNo = ViewData["MobileNo"]
+},
+    new { @style = "color:green;" })
+<hr />
+
+@if(Model.ToList().Count>0){
+foreach (var item in Model.Select((x, i) => new { Data = x, Index = i }))
+{
+    <div style="color: darkgrey" ;>
+        <b>@Html.DisplayNameFor(model => model.TicketId)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => item.Data.TicketId)<br />
+
+        <b>@Html.DisplayNameFor(model => model.TicketOrigin)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => item.Data.TicketOrigin)<br />
+
+        <b>@Html.DisplayNameFor(model => model.TicketNumber)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => item.Data.TicketNumber)<br />
+
+        <b>@Html.DisplayNameFor(model => model.Title)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => item.Data.Title)<br />
+
+        <b>@Html.DisplayNameFor(model => model.Description)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => item.Data.Description)<br />
+
+        <b>@Html.DisplayNameFor(model => model.Visibility)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => item.Data.Visibility)<br />
+        <br />
+
+        @*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalpopup_@item.Index">
+            Preview Popup
+        </button>*@
+    <div style="background-color: #f44336; text-align: center; width: 180px; border-radius: 5px; padding: 5px;">
+        @Html.ActionLink("Preview", "ComplaintDetail", "Account", new
+           {
+               id = @item.Data.TicketId,
+               MobileNo = ViewData["MobileNo"]
+           }, new { @style = "color:aqua;" })
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        @if (item.Data.StatusTypeId == 1 || item.Data.StatusTypeId == 2)
+        {
+            @Html.ActionLink("Close", "ComplaintCloseAndRating", "Account", new
+               {
+                   id = @item.Data.TicketId,
+                   MobileNo = ViewData["MobileNo"]
+               }, new { @style = "color:darkblue;" })
+        }
+        else if (item.Data.StatusTypeId == 3 || item.Data.StatusTypeId == 4)
+        {
+            @Html.ActionLink("Re-Open", "ComplaintReOpen", "Account", new
+               {
+                   id = @item.Data.TicketId,
+                   MobileNo = ViewData["MobileNo"]
+               }, new { @style = "color:darkblue;" })
+        }
+    </div>
+        <hr />
+        <br />
+
+        <div class="modal fade" id="modalpopup_@item.Index" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h1 style="color:cadetblue">Preview Details</h1>
+                    </div>
+                    <div style="color:black" class="modal-body">
+                        <b>@Html.DisplayNameFor(model => model.TicketId)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.TicketId)<br />
+                        <b>@Html.DisplayNameFor(model => model.TicketNumber)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.TicketNumber)<br />
+                        <b>@Html.DisplayNameFor(model => model.TicketOrigin)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.TicketOrigin)<br />
+                        <b>@Html.DisplayNameFor(model => model.Title)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.Title)<br />
+                        <b>@Html.DisplayNameFor(model => model.Description)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.Description)<br />
+                        <b>@Html.DisplayNameFor(model => model.Visibility)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.Visibility)<br />
+                        <b>@Html.DisplayNameFor(model => model.PausedComment)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.PausedComment)<br />
+                        <b>@Html.DisplayNameFor(model => model.TicketChannel)&nbsp; - </b>
+                        @Html.DisplayFor(modelItem => item.Data.TicketChannel)<br />
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+}
+}
+else
+{
+    <h1 style="color:beige;">* No Ticket Exist *</h1>
+}

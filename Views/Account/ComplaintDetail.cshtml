@@ -1,0 +1,97 @@
+﻿@model UrestComplaintManagement.Context.Ticket
+
+@{
+    ViewBag.Title = "ComplaintDetail";
+    bool rate5 = false;
+    bool rate4 = false;
+    bool rate3 = false;
+    bool rate2 = false;
+    bool rate1 = false;
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+    <link rel="stylesheet" href="~/Assets/rating.css">
+</head>
+
+<br />
+<br />
+<hr />
+@Html.ActionLink("+ Create New Ticket", "CreateNewTicket", "Account", new { @style = "color:green;" })
+<hr />
+
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+    @*<button style="width: 80px; color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</button>*@
+    @Html.ActionLink("Back", "Complaint", "Account", new
+    {
+        Mobile = ViewData["Mobile"]
+    },
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+
+</p>
+
+<h2 style="color:beige">Complaint Detail</h2>
+
+<div style="color:beige">
+    <b>@Html.DisplayNameFor(model => model.TicketId)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.TicketId)<br />
+    <b>@Html.DisplayNameFor(model => model.TicketNumber)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.TicketNumber)<br />
+    <b>@Html.DisplayNameFor(model => model.TicketOrigin)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.TicketOrigin)<br />
+    <b>@Html.DisplayNameFor(model => model.Title)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.Title)<br />
+    <b>@Html.DisplayNameFor(model => model.Description)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.Description)<br />
+    <b>@Html.DisplayNameFor(model => model.Visibility)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.Visibility)<br />
+    <b>@Html.DisplayNameFor(model => model.PausedComment)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.PausedComment)<br />
+    <b>@Html.DisplayNameFor(model => model.TicketChannel)&nbsp; - </b>
+    @Html.DisplayFor(modelItem => modelItem.TicketChannel)<br />
+</div>
+<br />
+
+@{ 
+    if (Model.rating.Count > 0)
+    {
+        if (Model.rating[0].Rating == "1")
+        { rate1 = true; }
+        else if (Model.rating[0].Rating == "2")
+        { rate2 = true; }
+        else if (Model.rating[0].Rating == "3")
+        { rate3 = true; }
+        else if (Model.rating[0].Rating == "4")
+        { rate4 = true; }
+        else if (Model.rating[0].Rating == "5")
+        { rate5 = true; }
+    }
+}
+
+<div class="rate">
+    <input type="radio" id="star5" name="rate" value="5" checked=@rate5 />
+    <label for="star5" title="text">5 stars</label>
+    <input type="radio" id="star4" name="rate" value="4" checked=@rate4 />
+    <label for="star4" title="text">4 stars</label>
+    <input type="radio" id="star3" name="rate" value="3" checked=@rate3 />
+    <label for="star3" title="text">3 stars</label>
+    <input type="radio" id="star2" name="rate" value="2" checked=@rate2 />
+    <label for="star2" title="text">2 stars</label>
+    <input type="radio" id="star1" name="rate" value="1" checked=@rate1 />
+    <label for="star1" title="text">1 star</label>
+</div>
+<br />
+<br />
+<br />
+<div style="color:darkblue; background-color:aliceblue; padding:10px;">
+    @foreach (var log in Model.logs)
+    {
+        <b>Logged On&nbsp; - </b>
+        @Html.DisplayFor(modelItem => log.loggedon)<br />
+        <b>Log&nbsp; - </b>
+        @Html.DisplayFor(modelItem => log.log)<br />
+    }
+</div>
+
+
+

@@ -1,0 +1,47 @@
+﻿@model UrestComplaintManagement.Context.PropertyMember
+
+@{
+    ViewBag.Title = "Login";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <head>
+        <link rel="stylesheet" href="~/Assets/Login.css">
+    </head>
+    <div class="login-box">
+        <form>
+
+         <img style="position:center; left: 50%;" src="~/Assets/Logo.png" id="icon" alt="User Icon" />
+
+            <hr />
+            <br />
+            <div style="color:aqua" class="user-box">
+                @*@Html.LabelFor(model => model.ContactNumber, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                <div>
+                    @Html.EditorFor(model => model.ContactNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile No." } })
+                    @Html.ValidationMessageFor(model => model.ContactNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div style="color:aqua" class="user-box">
+
+                <div>
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Password" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div>
+                <input style=" color:aliceblue; display: inline-block;background-color:cornflowerblue " type="submit" value="Login" class="btn btn" /><br /><br />
+                @Html.ActionLink("SignUp", "Signup", "Account")<br /><br />
+                @Html.ActionLink("Forgot Password?", "Index", "Home")<br /><br />
+                @Html.ActionLink("Login Via OTP", "Index", "Home")
+            </div><br />
+           
+        </form>
+    </div>
+}
+
+

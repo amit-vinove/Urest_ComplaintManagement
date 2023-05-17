@@ -1,0 +1,422 @@
+﻿@model UrestComplaintManagement.Context.AmenitiesBooking
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+@{
+    ViewBag.Title = "Create Amenities Booking";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<br />
+<br />
+<br />
+<h3 style="color:beige;">Amenities Booking</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    if (ViewBag.Saved != "Saved")
+    {
+        <span id="responseMsg" style="color:red;">@ViewBag.Response</span>
+    }
+    else
+    { 
+        <span id="responseMsg" style="color:beige;">@ViewBag.Response</span>
+    }
+
+    <br />
+    <input type="hidden" id="mobileNo" value="@ViewData["MobileNo"]" />
+
+    <div>
+        <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+            @Html.ActionLink("Back", "GoHomePage", "Account", new
+            {
+                MobileNo = ViewData["MobileNo"]
+            },
+            new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+        </p>
+    </div>
+    <div class="az-content-body pd-lg-l-40 d-flex flex-column" id="divPageContent">
+        <div class="wd-sm-300">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <table>
+                <tr>
+                    <td colspan="3">
+                        <div>
+                            <img src="~/Assets/Calendar-PNG-Pic.png" style="width:50px; height:47px;" />
+                            <input type="date" id="AmenityTime" name="AmenityTime" value="" onchange="FillDetails0()">
+                        </div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <br />
+                        <div class="d-md-flex mg-b-20" style="color:beige;">
+                            <label class="form-label">Time From: <span class="tx-danger"></span></label>
+                            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0" style="width:100px;">
+                                <select class="form-control wd-xl-250 select2" name="TimeFr" id="TimeFr" data-placeholder="Choose one" data-parsley-class-handler="#lnId"
+                                        data-parsley-errors-container=" #slerrorcontainer55" style="text-align:center;" required onchange="">
+                                    <option label="from"></option>
+                                    <option label="04:00" value="04:00"></option>
+                                    <option label="04:30" value="04:30"></option>
+                                    <option label="05:00" value="05:00"></option>
+                                    <option label="05:30" value="05:30"></option>
+                                    <option label="06:00" value="06:00"></option>
+                                    <option label="06:30" value="06:30"></option>
+                                    <option label="07:00" value="07:00"></option>
+                                    <option label="07:30" value="07:30"></option>
+                                    <option label="08:00" value="08:00"></option>
+                                    <option label="08:30" value="08:30"></option>
+                                    <option label="09:00" value="09:00"></option>
+                                    <option label="09:30" value="09:30"></option>
+                                    <option label="10:00" value="10:00"></option>
+                                    <option label="10:30" value="10:30"></option>
+                                    <option label="11:00" value="11:00"></option>
+                                    <option label="11:30" value="11:30"></option>
+                                    <option label="12:00" value="12:00"></option>
+                                    <option label="12:30" value="12:30"></option>
+                                    <option label="13:00" value="13:00"></option>
+                                    <option label="13:30" value="13:30"></option>
+                                    <option label="14:00" value="14:00"></option>
+                                    <option label="14:30" value="14:30"></option>
+                                    <option label="15:00" value="15:00"></option>
+                                    <option label="15:30" value="15:30"></option>
+                                    <option label="16:00" value="16:00"></option>
+                                    <option label="16:30" value="16:30"></option>
+                                    <option label="17:00" value="17:00"></option>
+                                    <option label="17:30" value="17:30"></option>
+                                    <option label="18:00" value="18:00"></option>
+                                    <option label="18:30" value="18:30"></option>
+                                    <option label="19:00" value="19:00"></option>
+                                    <option label="19:30" value="19:30"></option>
+                                    <option label="20:00" value="20:00"></option>
+                                    <option label="20:30" value="20:30"></option>
+                                    <option label="21:00" value="21:00"></option>
+                                    <option label="20:30" value="21:30"></option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="selimeFr" runat="server" id="selimeFr" />
+                            <div id="slErrorContainer55"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <br />
+                        <div class="d-md-flex mg-b-20" style="color:beige;">
+                            <label class="form-label">Time To: <span class="tx-danger"></span></label>
+                            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0" style="width:100px;">
+                                <select class="form-control wd-xl-250 select2" name="TimeTo" id="TimeTo" data-placeholder="Choose one" data-parsley-class-handler="#lnId"
+                                        data-parsley-errors-container=" #slerrorcontainer55" style="text-align:center;" required onchange="">
+                                    <option label="to"></option>
+                                    <option label="04:00" value="04:00"></option>
+                                    <option label="04:30" value="04:30"></option>
+                                    <option label="05:00" value="05:00"></option>
+                                    <option label="05:30" value="05:30"></option>
+                                    <option label="06:00" value="06:00"></option>
+                                    <option label="06:30" value="06:30"></option>
+                                    <option label="07:00" value="07:00"></option>
+                                    <option label="07:30" value="07:30"></option>
+                                    <option label="08:00" value="08:00"></option>
+                                    <option label="08:30" value="08:30"></option>
+                                    <option label="09:00" value="09:00"></option>
+                                    <option label="09:30" value="09:30"></option>
+                                    <option label="10:00" value="10:00"></option>
+                                    <option label="10:30" value="10:30"></option>
+                                    <option label="11:00" value="11:00"></option>
+                                    <option label="11:30" value="11:30"></option>
+                                    <option label="12:00" value="12:00"></option>
+                                    <option label="12:30" value="12:30"></option>
+                                    <option label="13:00" value="13:00"></option>
+                                    <option label="13:30" value="13:30"></option>
+                                    <option label="14:00" value="14:00"></option>
+                                    <option label="14:30" value="14:30"></option>
+                                    <option label="15:00" value="15:00"></option>
+                                    <option label="15:30" value="15:30"></option>
+                                    <option label="16:00" value="16:00"></option>
+                                    <option label="16:30" value="16:30"></option>
+                                    <option label="17:00" value="17:00"></option>
+                                    <option label="17:30" value="17:30"></option>
+                                    <option label="18:00" value="18:00"></option>
+                                    <option label="18:30" value="18:30"></option>
+                                    <option label="19:00" value="19:00"></option>
+                                    <option label="19:30" value="19:30"></option>
+                                    <option label="20:00" value="20:00"></option>
+                                    <option label="20:30" value="20:30"></option>
+                                    <option label="21:00" value="21:00"></option>
+                                    <option label="20:30" value="21:30"></option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="selimeTo" runat="server" id="selimeTo" />
+                            <div id="slErrorContainer55"></div>
+                        </div>
+
+                    </td>
+                    <td>
+                        <br />
+                        <div class="d-md-flex mg-b-20" style="color:beige;padding-left:10px;">
+                            <label class="form-label">Nos of Persons: <span class="tx-danger"></span></label>
+                            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                                <input data-parsley-errors-container=" #slerrorcontainer55" type="number" name="NoOfPersons" runat="server" id="NoOfPersons" style="color:black; width:110px;height:35px;" />
+                            </div>
+                            <div id="slErrorContainer55"></div>
+                        </div>
+                    </td>
+                <tr>
+
+                    <td colspan="3">
+                        <div class="d-md-flex mg-b-20" style="color:beige;">
+                            <label class="form-label">Select Amenity: <span class="tx-danger"></span></label>
+                            <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                                <select class="form-control wd-xl-250 select2" name="AmenityId" id="AmenityId" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" required onchange="">
+                                    <option label="Choose one"></option>
+                                    @foreach (var item in ViewBag.Amenities)
+                                    {
+                                        <option label=@item.Text value=@item.Value></option>
+                                    }
+                                </select>
+                            </div>
+                            <input type="hidden" name="AminityName" runat="server" id="AminityName" />
+                            <div id="slErrorContainer55"></div>
+                        </div>
+                        <br />
+
+                    </td>
+                </tr>
+            </table>
+
+
+            <input type="hidden" name="MobileNo" value=@ViewData["MobileNo"] />
+            <div class="form-group">
+                <div>
+                    @*<input type="button" value="Back" class="btn btn-default" style="background-color: #f44336; width:100px;" onclick="history.go(-1);" />*@
+
+                    <input type="submit" value="Save" class="btn btn-default" style=" width:100px; background-color:green; color:black; font-weight:bolder;" onclick="SaveData()" />
+
+                    &nbsp;
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $('#AmenityId').change(function () {
+            $('#AminityName').val($('#AmenityId option:selected').text());
+        });
+
+        $(document).ready(function () {
+            const dateInput = document.getElementById('AmenityTime');
+
+            // ✅ Using UTC (universal coordinated time)
+            dateInput.value = new Date().toISOString().split('T')[0];
+        });
+
+        function SaveData0() {
+            var bookingDate = document.getElementById("AmenityTime").value;
+            var timeSlotFr = $('#TimeFr').val();
+            var timeSlotTo = $('#TimeTo').val();
+            var aminityID = $('#AmenityId').val();
+            var nosofPersons = $('#NoOfPersons').val();
+            var mobileNo = $('#mobileNo').val();
+
+            //alert(bookingDate);
+            //alert(timeSlotFr);
+            //alert(timeSlotTo);
+            //alert(aminityID);
+            //alert(nosofPersons);
+
+            if (timeSlotFr == "" || timeSlotTo == "" || aminityID == "" || nosofPersons == "")
+            { return; }
+            if (timeSlotFr > timeSlotTo)
+            { alert("'Time Slot To' should be greater then 'Time Slot From' !"); return; }
+
+            var urlLink = "@Url.Action("ValidateAminityBooking", "Account")";
+            $.ajax({
+                url: urlLink,
+                type: "POST",
+                dataType: "JSON",
+                data: { mobileNo: mobileNo, bkgDate: bookingDate, timeFr: timeSlotFr, timeTo: timeSlotTo, ameID: aminityID, nosP: nosofPersons},
+                success: function (Data) {
+                    if (Data == "0") { alert("Saved !"); }// FillDetails0(); }
+                    else { alert("Booking already done for given date and slot !"); return; }
+                }
+            });
+        }
+    </script>
+}
+
+<div style="color:beige;">
+    <table id="tblData">
+        <thead>
+            <tr>
+                <td style="border-style:solid; border-color:beige; border-width:1px; padding:2px;">Date</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">Aminities</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">Time Slot</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px;">Person</td>
+                <td style="border-style: solid; border-color: beige; border-width: 1px; padding: 2px; float: right;">Action</td>
+            </tr>
+        </thead>
+        <tbody>
+            @using UrestComplaintManagement.Helpers;
+
+            @if (ViewBag.AmenitiesBookings == null) { }
+            else
+            {
+                foreach (var item in ViewBag.AmenitiesBookings)
+                {
+                    <tr style="border-bottom: solid; border-width: 1px; border-color: orange;">
+                        <td style="padding:5px;width:20%;"> @item.BkgDtStr</td>
+                        <td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">@item.AminityName</div></td>
+                        <td style="width:30%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">@item.FrStr - @item.ToStr</div></td>
+                        <td style="padding:5px; width:10%; text-align:center;"> @item.NoOfPersons</td>
+
+                        @if (item.Approved == 0)
+                        {
+                            @*<td><button class="btn btn - sm btn - warning" title="View" onclick="DeleteEntry(@item.Id)"><i class="fa fa-trash" style="color:red;"></i></button></td>*@
+                    <td style="text-align:center;">
+                        @*@Html.ImageActionLink("D", "DeleteAmenitesBooking", "Account", new { id = @item.Id, MobileNo = ViewData["MobileNo"] }, new { @style = "color: red; class='fa fa - trash'" }, "~/Assets/cross.png")*@
+
+                        @Html.ActionLink("X", "DeleteAmenitesBooking", "Account", new { id = @item.Id, MobileNo = ViewData["MobileNo"] }, new { @style = "color: red; text-align:center;", @class="fa fa - trash"})
+                    </td>
+                        }
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    //$(document).ready(
+    function FillDetails() {
+                    $("#tblData tbody tr").remove();
+        var bookingDate = document.getElementById("AmenityTime").value;
+        var mobileNo = $('#mobileNo').val();
+                   // alert(mobileNo);
+        $.ajax({
+            url: "@Url.Action("AmenityBookingList", "Account")",
+            type: "POST",
+            dataType: "JSON",
+            data: { MobileNo: mobileNo, BookingDate: bookingDate },
+            success: function (Data) {
+                var Counter = Data.length;
+                for (i = 0; i < Counter; i++) {
+
+                    //alert(bookingDate);
+                    //alert(mobileNo);
+
+                    var
+                    Id = Data[i].Id;
+                    BkgDtStr = Data[i].BkgDtStr;
+                    AminityName = Data[i].AminityName;
+                    FrStr = Data[i].FrStr;
+                    ToStr = Data[i].ToStr;
+                    NoOfPersons = Data[i].NoOfPersons;
+                    IsDeleted = Data[i].IsDeleted;
+                    Approved = Data[i].Approved;
+                    //alert(Approved);
+
+                    var icoClass = "fa fa-trash"; icoColor ="red"
+                    if (IsDeleted == 1)
+                    { icoClass = "fa fa-trash"; icoColor = "red" }
+                    var delButton = "";
+                    if (Approved == 0)
+                    {
+                        delButton = '<button class="btn btn - sm btn - warning" title = "View" onclick = "DeleteEntry(' + Id + ', ' + '' + ')" > <i class="' + icoClass + '" style="color: ' + icoColor + ';"></i></button>';
+                    }
+
+                    var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: orange;" ><td style="padding:5px;width:20%;">' + BkgDtStr + '</td><td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">' + AminityName + '</div></td><td style="width:30%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">' + FrStr + ' - ' + ToStr + '</div></td><td style="padding:5px; width:10%; text-align:center;">' + NoOfPersons + '</td><td>' + delButton + '</td > <td><input id="taskID_' + i + '" value=' + Id + ' type="hidden" /> </td></tr > ';
+
+                    //alert(transaction);
+
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                    $('#tblData tbody').append(transaction);
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                }
+
+            }
+        });
+    }
+    //);
+    function FillDetails00() {
+                    $("#tblData tbody tr").remove();
+        var bookingDate = document.getElementById("AmenityTime").value;
+        var mobileNo = $('#mobileNo').val();
+
+        $.ajax({
+            url: "@Url.Action("AmenityBookingList", "Account")",
+            type: "POST",
+            dataType: "JSON",
+            data: { MobileNo: mobileNo, BookingDate: bookingDate },
+            success: function (Data) {
+                var Counter = Data.length;
+                for (i = 0; i < Counter; i++) {
+
+                    //alert(bookingDate);
+                    //alert(mobileNo);
+
+                    var
+                    Id = Data[i].Id;
+                    BkgDtStr = Data[i].BkgDtStr;
+                    AminityName = Data[i].AminityName;
+                    FrStr = Data[i].FrStr;
+                    ToStr = Data[i].ToStr;
+                    NoOfPersons = Data[i].NoOfPersons;
+                    IsDeleted = Data[i].IsDeleted;
+                    Approved = Data[i].Approved;
+                    //alert(Approved);
+
+                    var icoClass = "fa fa-trash"; icoColor ="red"
+                    if (IsDeleted == 1)
+                    { icoClass = "fa fa-trash"; icoColor = "red" }
+                    var delButton = "";
+                    if (Approved == 0)
+                    {
+                        delButton = '<button class="btn btn - sm btn - warning" title = "View" onclick = "DeleteEntry(' + Id + ', ' + '' + ')" > <i class="' + icoClass + '" style="color: ' + icoColor + ';"></i></button>';
+                    }
+
+                    var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: orange;" ><td style="padding:5px;width:20%;">' + BkgDtStr + '</td><td style="width:40%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="subject">' + AminityName + '</div></td><td style="width:30%;"><div style="padding:5px; overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="message">' + FrStr + ' - ' + ToStr + '</div></td><td style="padding:5px; width:10%; text-align:center;">' + NoOfPersons + '</td><td>' + delButton + '</td > <td><input id="taskID_' + i + '" value=' + Id + ' type="hidden" /> </td></tr > ';
+
+                    //alert(transaction);
+
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                    $('#tblData tbody').append(transaction);
+                    $('#tblData tbody').append('<tr><td style="height:10px;"></td></tr>');
+                }
+
+            }
+        });
+    }
+    function DeleteEntry(id) {
+        //alert(id);
+
+            var mobileNo = $('#mobileNo').val();
+
+            var urlLink = "@Url.Action("DeleteAmenitesBooking", "Account")";
+            $.ajax({
+                url: urlLink,
+                type: "POST",
+                dataType: "html",
+                data: { Id: id, MobileNo: mobileNo},
+                success: function (Data) {
+                //    if (Data == "1") {
+                //        alert("Deleted !");// FillDetails0();
+                //    }
+                //    else { alert("Deletion Fail !"); }// return; }
+                }
+            });
+
+
+    }
+</script>

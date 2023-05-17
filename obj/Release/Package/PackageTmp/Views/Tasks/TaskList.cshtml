@@ -1,0 +1,337 @@
+﻿
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .disabledbutton {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .enablebutton {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .contentBox {
+            /*position: absolute;*/
+            top: 100px;
+            left: 50%;
+            width: 400px;
+            /*padding: 40px;*/
+            /*transform: translate(-50%, -50%);*/
+            background: rgba(0,0,0,.5);
+            /*//box-sizing: border-box;*/
+            box-shadow: 0 15px 25px rgba(0,0,0,.6);
+            border-radius: 10px;
+            overflow: scroll;
+        }
+
+        .center {
+            margin: auto;
+            width: 500px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,.6);
+            box-shadow: 0 15px 25px rgba(0,0,0,.6);
+        }
+    </style>
+
+</head>
+
+<h2>Task Checklist</h2>
+
+<div>
+    <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+        @Html.ActionLink("Back", "GoHomePage", "Account", new
+   {
+       MobileNo = ViewData["MobileNo"]
+   },
+     new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+    </p>
+</div>
+
+<h2 style="color:beige;">Task Checklist</h2>
+
+<div class="center">
+    <div>
+        <div class="az-content-body pd-lg-l-40 d-flex flex-column" id="divPageContent">
+            <div class="wd-sm-300">
+                <div class="d-md-flex mg-b-20" style="color:beige;">
+                    <div style="pointer-events: none;" hidden>
+                        <div>
+                            <img src="~/Assets/Calendar-PNG-Pic.png" style="width:50px; height:50px;" />
+                            <input type="date" id="transDate" name="transDate" value="">
+                        </div>
+
+                        <br />
+
+                        <label class="form-label">Category Name: <span class="tx-danger"></span></label>
+                        <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                            <select class="form-control wd-xl-250 select2" name="CategoryId" id="CategoryId" data-placeholder="Choose one" data-parsley-class-handler="#lnId"
+                                    data-parsley-errors-container=" #slerrorcontainer55" required onchange="FillSubCategory()">
+                                <option label="Choose one"></option>
+                                @foreach (var item in ViewBag.Categories)
+                                {
+                                    <option label=@item.Text value=@item.Value></option>
+                                }
+                            </select>
+                        </div>
+                        <input type="hidden" name="CategoryName" runat="server" id="CategoryName" />
+                        <div id="slErrorContainer55"></div>
+
+                        <label class="form-label">Sub-Category: <span class="tx-danger"></span></label>
+                        <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                            <select class="form-control wd-xl-250 select2" name="SubCategoryId" id="SubCategoryId" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" required>
+                                <option label="Choose one"></option>
+                            </select>
+                        </div>
+                        <input type="text" name="SubCategoryName" id="SubCategoryName" class="form-control wd-250" style="display:none" />
+                        <div id="slErrorContainer55"></div>
+
+                        <label class="form-label">Occurance: <span class="tx-danger"></span></label>
+                        <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                            <select class="form-control wd-xl-250 select2" name="Occurance" id="Occurance" data-placeholder="Choose one" data-parsley-class-handler="#lnId"
+                                    data-parsley-errors-container=" #slerrorcontainer55" required>
+                                <option label="Choose one"></option>
+                                <option label="Monthly" value="2"></option>
+                                <option label="Weekly" value="0"></option>
+                                <option label="Daily" value="1"></option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="OccuranceName" runat="server" id="OccuranceName" />
+
+                        <label class="form-label">Assigned To: <span class="tx-danger"></span></label>
+                        <div class="parsley-input mg-md-l-20 mg-t-5 mg-md-t-0">
+                            <select class="form-control wd-xl-250 select2" name="AssignedtoId" id="AssignedtoId" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" required>
+                                <option label="Choose one"></option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="AssignedtoName" runat="server" id="AssignedtoName" />
+                        <br />
+
+                        <div>
+                            <button type="submit" style="background-color:darkgreen; color:white; width: 150px;">Show</button>
+                        </div>
+                        <br />
+                    </div>
+
+                    <div class="form-group" style="border:solid; border-width:1px; border-color:beige; width:450px; padding:5px;">
+                        <table id="tblData">
+                            <thead>
+                                <tr style="border: solid; border-width: 1px; border-color: beige;">
+                                    <th style="width:180px;">
+                                        Category Name
+                                    </th>
+                                    <th style="width:180px;">
+                                        Name
+                                    </th>
+                                    <th style="width:120px;">
+                                        Occurance
+                                    </th>
+                                    <th style="width:100px;">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var i = 0;}
+
+                                @foreach (var task in ViewBag.Data)
+                                {
+                                    var CategoryName = task.CategoryName;
+                                    var Name = task.Name;
+                                    var TaskId = task.TaskId;
+                                    var Occurence = task.Occurence;
+                                    var Remarks = task.Remarks;
+                                    var Modfiy = task.EntryType;
+                                    var butModify = Modfiy == 1 ? "Modify" : "View";
+                                    var qrCode = task.QRCode;
+
+                                    //var htmlQRCode = ""; var htmlModiView = "";
+
+                                    <tr><td style="height:10px;"></td></tr>
+
+                                    <tr style="border-bottom:solid; border-width:1px; border-color:orange;">
+                                        <td>@CategoryName</td>
+                                        <td>
+                                            <div style="overflow:auto; word-wrap: break-word; height:aboslute; width:175px; scrollbar:none;" id="taskName">@Name</div>
+                                        </td>
+                                        <td style="text-align:center;">@Occurence</td>
+                                        <td>
+                                            @using UrestComplaintManagement.Helpers;
+
+                                            @if (butModify == "Modify")
+                                            {
+                                                <div style="text-align:center; vertical-align:central; width:45px; height:30px; background-color:green; border-radius:3px;">
+                                                    <i class="fa fa-pen-alt">
+                                                        @Html.ActionLink("E", "TaskDetailsQRManual", "Tasks", new
+                                                           {
+                                                               QRCodeR = qrCode,
+                                                               MobileNo = ViewData["MobileNo"]
+                                                           }, new { @style = "color:yellow;" })
+                                                    </i>
+
+                                                    @*<button class="btn btn-sm btn-info" title="Edit">
+                </button>*@
+                                                </div>
+
+                                                @*if (qrCode != "" || qrCode != null)
+            { <button class="btn btn-sm btn-primary" title="Scan QR" onclick=CallQR(@qrCode)><i class="fa fa-qrcode" aria-hidden="true"></i></button>}*@
+                                            }
+                                            else
+                                            { <div style="text-align:center; vertical-align:central; width:45px; height:30px; background-color:coral; border-radius:3px;">
+                                                    <i class="fa fa-pen-alt">
+                                                        @Html.ActionLink("C", "TaskDetailsQRManual", "Tasks", new
+                                                   {
+                                                       QRCodeR = qrCode,
+                                                       MobileNo = ViewData["MobileNo"]
+                                                   }, new { @style = "color:yellow;" })
+                                                    </i>
+
+                                                    @*<button class="btn btn-sm btn-info" title="Edit">
+                </button>*@
+                                                </div>
+
+                                                @*if (qrCode != "" || qrCode != null)
+            { <button class="btn btn-sm btn-primary" title="Scan QR" onclick=CallQR(@qrCode)><i class="fa fa-qrcode" aria-hidden="true"></i></button>}*@
+                                            }
+                                        </td>
+                                        <td>
+                                            <input id="taskID_@i" value = @TaskId type="hidden"/> 
+                                        </td>
+                                    </tr>
+
+                                    <tr><td style="height:10px;"></td></tr>
+
+                                    i++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+        <script>
+            $(document).ready(function () {
+                $('#AssignedtoId').empty();
+                $.ajax({
+                    url: "@Url.Action("GetAssignToList", "Tasks")",
+                    type: "GET",
+                    dataType: "JSON",
+                    success: function (Data) {
+                        var Counter = Data.length;
+                        var CreatedData = Data;
+                        $("#AssignedtoId").append(" <option label=Choose one></option>");
+                        for (var i = 0; i < CreatedData.length; i++) {
+                            var opt = new Option(CreatedData[i].Text, CreatedData[i].Value);
+                            $('#AssignedtoId').append(opt);
+                        }
+                    }
+                });
+            }
+        );
+
+    $(document).ready(function () {
+        const dateInput = document.getElementById('transDate');
+
+        dateInput.value = new Date().toISOString().split('T')[0];
+    });
+
+    $('#CategoryId').change(function () {
+        $('#CategoryName').val($('#CategoryId option:selected').text());
+    });
+    $('#Occurance').change(function () {
+        $('#OccuranceName').val($('#Occurance option:selected').text());
+    });
+
+    function GetRadioValue(id) {
+        // var getchecked = $('#index_' + id).val();
+        var getval = $('#index_' + id).is(":checked");
+           /*alert(getchecked + id + '_' + getval);*/
+        if (getval) {
+            $('#Remarks_' + id).val('');
+            $('#Remarks_' + id).prop("hidden", true);
+            //$('#lRemarks_' + id).prop("hidden", true);
+
+        } else {
+            $('#Remarks_' + id).prop("hidden", false);
+            //$('#lRemarks_' + id).prop("hidden", false);
+        }
+    }
+
+    function FillSubCategory() {
+        $('#SubCategoryId').empty();
+        var ctr = 0;
+        var Cat = "";
+        var CategoryId = $('#CategoryId').val();
+
+        $.ajax({
+            url: "@Url.Action("GetSubCategory", "Tasks")",
+            type: "GET",
+            dataType: "JSON",
+            data: { CategoryId: CategoryId },
+            success: function (Data) {
+                var Counter = Data.length;
+                var CreatedData = Data;
+                $("#SubCategoryId").append(" <option label=Choose one></option>");
+                for (var i = 0; i < CreatedData.length; i++) {
+                    var opt = new Option(CreatedData[i].Text, CreatedData[i].Value);
+                    $('#SubCategoryId').append(opt);
+
+                }
+
+            }
+        });
+    }
+        </script>
+    </div>
+</div>
+
+<div id="partialModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ShowTaskDetails (taskID) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("TaskDetails", "Tasks")",
+            data: '{Id: "' + taskID + '" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $("#partialModal").find(".modal-body").html(response);
+                $("#partialModal").modal('show');
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    };
+</script>
+<script type="text/javascript">
+
+    function CallQR(QRCodeP) {
+        //alert(QRCodeP);
+        //console.log(QRCodeP);
+
+        document.location =
+             '@Url.Action("TaskDetailsQRManual", "Tasks")?QRCodeR=' + QRCodeP;
+
+    }
+</script>

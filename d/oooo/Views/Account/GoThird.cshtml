@@ -1,0 +1,20 @@
+﻿
+<br />
+<br />
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+    @*<a style="color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</a>*@
+
+    @Html.ActionLink("Back", "GoHomePage", "Account", new
+    {
+        MobileNo = ViewData["MobileNo"]
+    },
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+</p>
+
+
+@{
+    ViewBag.Title = "GoThird";
+}
+
+<h2></h2>
+

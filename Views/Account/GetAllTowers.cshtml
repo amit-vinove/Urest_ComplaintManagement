@@ -1,0 +1,61 @@
+﻿@model IEnumerable<UrestComplaintManagement.Context.PropertyTower>
+
+@{
+    ViewBag.Title = "GetAllTowers";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+<br />
+
+<br />
+<br />
+
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+    @Html.ActionLink("Back", "SocietyDirectory", "Account", new
+    {
+        MobileNo = ViewData["MobileNo"]
+    },
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+</p>
+
+<h2 style="color:beige">ResidentDirectory</h2>
+
+<p style="color:beige">Edit your community profile <button style="color: black; background-color: #f44336; font-weight:bold">Edit Profile</button></p>
+<br />
+<a href="#" class="next" style="color:beige">Management Commitee &raquo;</a>
+<br />
+<br />
+
+<p style="color:beige">BUILDINGS</p>
+<br />
+
+
+
+<p style="color:beige">@Html.DisplayNameFor(model => model.Towername)</p>
+
+
+@foreach (var item in Model)
+{
+    var id = item.Towername;
+    @*<button onclick="location.href='@Url.Action("TowerDetail", "Account")?id=@id'">
+        @Html.DisplayFor(modelItem => item.Towername)
+    </button>*@
+
+    <p style=" color: darkblue; width: 200px; height: 25px; background-color: aquamarine; text-align: center; vertical-align:central;">
+        @Html.ActionLink((item.Towername), "TowerDetail", "Account", new
+        {
+            id=id,
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: aquamarine; font-weight: bold" })
+    </p>
+
+    <br />
+    <br />
+
+
+}
+
+</table>

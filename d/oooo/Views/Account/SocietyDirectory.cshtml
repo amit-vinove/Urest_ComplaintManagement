@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "SocietyDirectory";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+</head>
+
+<div style="text-align:center;">
+    <br /><br /><br />
+    <h2 style="color:beige; font-weight:bold ">Society Directory</h2>
+    <br /><br />
+    <p style=" color: darkblue; width: 100%; height: 25px; background-color: aquamarine; text-align: center; vertical-align:central;">
+        @Html.ActionLink("Resident Directory", "GetAllTowers", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: aquamarine; font-weight: bold" })
+    </p>
+    <br /><br />
+    <p style=" color: darkblue; width: 100%; height: 25px; background-color: aquamarine; text-align: center; vertical-align:central;">
+        @Html.ActionLink("Service Directory", "ServiceDirecory", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: aquamarine; font-weight: bold" })
+    </p>
+    <br /><br />
+    <p style=" color: darkblue; width: 100%; height: 25px; background-color: aquamarine; text-align: center; vertical-align:central;">
+        @Html.ActionLink("Society Commitee", "SocietyDirectory", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: aquamarine; font-weight: bold" })
+    </p>
+    <br /><br />
+    <p style=" color: darkblue; width: 100%; height: 25px; background-color: aquamarine; text-align: center; vertical-align:central;">
+        @Html.ActionLink("Emergency Directory", "EmergencyDirectory", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: aquamarine; font-weight: bold" })
+    </p>
+    <br /><br />
+    <p style=" color: darkblue; width: 100%; height: 25px; background-color: aquamarine; text-align: center; vertical-align:central;">
+        @Html.ActionLink("Guards Directory", "SocietyDirectory", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: aquamarine; font-weight: bold" })
+    </p>
+    <br /><br />
+
+    <p style=" color: beige; width: 100%; height: 20px; background-color: #f44336; text-align:center;">
+        @Html.ActionLink("Back", "GoHomePage", "Account", new
+        {
+            MobileNo = ViewData["MobileNo"]
+        },
+        new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+    </p>
+</div>
+

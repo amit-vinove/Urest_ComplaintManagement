@@ -1,0 +1,189 @@
+﻿<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+@{
+    ViewBag.Title = "Attendance";
+    var Id = "";
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<br />
+<br />
+<br />
+<h3 style="color:beige;">Attendance</h3>
+
+@using (Html.BeginForm("Attendance", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    if (ViewBag.Saved != "1")
+    {
+        <span id="responseMsg" style="color:red;">@ViewBag.Response</span>
+    }
+    else
+    {
+        <span id="responseMsg" style="color:beige;">@ViewBag.Response</span>
+    }
+
+    <br />
+    <input type="hidden" id="MobileNo" name="MobileNo" value="@ViewData["MobileNo"]" />
+
+    <div>
+        <p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center; border-radius:5px;">
+            @Html.ActionLink("Back", "GoHomePage", "Account", new
+            {
+                MobileNo = ViewData["MobileNo"]
+            },
+            new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+        </p>
+    </div>
+
+    <div class="az-content-body pd-lg-l-40 d-flex flex-column" id="divPageContent">
+        <div class="wd-sm-300">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <table>
+                <tr>
+                    <td>
+                        <div style="width:48%">
+                            <table>
+                                <tr>
+                                    <td colspan="3">
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Employee Id: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <input value="@ViewBag.Attendee[0].EmployeeId" type="text" id="EmployeeId" name="EmployeeId" style="color:black;" />
+                                                <input hidden="hidden" value="@Id)" type="text" id="Id" name="Id" style="color:black;" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div>
+                                            <p style=" color: beige; width: 100px; height: 20px; background-color:lightgray; text-align:center; border-radius:5px;">
+                                            </p>
+                                        </div>
+
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Employee Name: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <input type="text" readonly="readonly" value="@ViewBag.Attendee[0].EmployeeName" id="EmployeeName" name="EmployeeName" style="color:black;" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Job Profile: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <input type="text" id="JobProfile" readonly="readonly" name="JobProfile" value="@ViewBag.Attendee[0].JobProfile" style="color:black;" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Attendance: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <select class="form-control wd-xl-250 select2" name="PunchType" id="PunchType" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" style="text-align:left; width:162px;" required onchange="">
+                                                    <option label="Choose one"></option>
+                                                    <option label="Check In" value="Check In"></option>
+                                                    <option label="Check Out" value="Check Out"></option>
+                                                </select>
+                                                <div id="slErrorContainer55"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="color:beige;">Gate No: <span class="tx-danger"></span></label>
+                                            <div style="width:100px;">
+                                                <select class="form-control wd-xl-250 select2" name="GateNo" id="GateNo" data-placeholder="Choose one" data-parsley-class-handler="#lnId" data-parsley-errors-container=" #slerrorcontainer55" style="text-align:left; width:162px;" required onchange="" value="@ViewData["LastAccessedGateNo"]">
+                                                    <option label="Choose one"></option>
+                                                    @for (int i = 1; i <= 10;)
+                                                    {
+                                                        if (@ViewData["LastAccessedGateNo"].ToString() == i.ToString())
+                                                        {
+                                                            <option label="@i" value="@i" selected="selected">@i</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option label="@i" value="@i">@i</option>
+                                                        }
+                                                        i++;
+                                                    }
+                                                </select>
+                                                <div id="slErrorContainer55"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="width:2%"></div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+
+            <input type="hidden" name="MobileNo" value=@ViewData["MobileNo"] />
+            <div class="form-group">
+                <div>
+                    @{ bool kycApproved = false; }
+                    @if (ViewBag.KycDetailsList != null)
+                    {
+                        foreach (var item in ViewBag.KycDetailsList)
+                        {
+                            if (item.Approved == 1)
+                            {
+                                kycApproved = true;
+                            }
+                        }
+                    }
+                    @*@if (!kycApproved)
+                        {
+                            <br />
+                            <input type="submit" value="Save" class="btn btn-default" style=" width:100px; background-color:green; color:black; font-weight:bolder;" />
+                        }*@
+                    <br />
+                    <input type="submit" value="Save" class="btn btn-default" style=" width:100px; background-color:green; color:black; font-weight:bolder;" />
+                    &nbsp;
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @*<div>
+            <img id="output" style="height:300px; width:300px;" alt="" src="@Url.Action("RetrieveImage", "Account", new { kycId = ViewData["KycID"] })"/>
+        </div>*@
+</div>
+
+<script>
+        function getEmpData() {
+            var empId = document.getElementById('EmployeeId').value;
+
+            $.ajax({
+                url: "@Url.Action("GetEmpData", "Account")",
+                type: "POST",
+                dataType: "JSON",
+                data: { empID: empId },
+                success: function (Data) {
+                    var Counter = Data.length;
+                    for (i = 0; i < Counter; i++) {
+                        document.getElementById('kycId').value = Data[i].Id;
+                        document.getElementById('EmployeeName').value = Data[i].EmployeeName;
+                        document.getElementById('JobProfile').value = Data[i].JobProfile;
+                    }
+                }
+            });
+
+        }
+</script>
+
+
+
+

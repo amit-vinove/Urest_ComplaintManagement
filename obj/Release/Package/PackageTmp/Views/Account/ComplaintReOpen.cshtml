@@ -1,0 +1,73 @@
+﻿@*@model IEnumerable<UrestComplaintManagement.Context.Ticket>*@
+@model UrestComplaintManagement.Context.Ticket
+
+@{
+    ViewBag.Title = "Complaint Close and Feedback";
+    
+}
+
+<head>
+    <link rel="stylesheet" href="~/Assets/Login.css">
+    <link rel="stylesheet" href="~/Assets/rating.css">
+</head>
+
+<br />
+<br />
+<hr />
+@Html.ActionLink("+ Create New Ticket", "CreateNewTicket", "Account", new { @style = "color:green;" })
+<hr />
+
+<p style=" color: beige; width: 100px; height: 20px; background-color: #f44336; text-align:center;">
+    @*<button style="width: 80px; color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</button>*@
+
+    @Html.ActionLink("Back", "Complaint", "Account", new
+    {
+        Mobile = ViewData["MobileNo"]
+    },
+    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+</p>
+
+<h2 style="color:beige">Complaint Close and Feedback</h2>
+
+@*@foreach (var item in Model)
+{*@
+    <div style="color:beige">
+        <b>@Html.DisplayNameFor(model => model.TicketId)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.TicketId)<br />
+        <b>@Html.DisplayNameFor(model => model.TicketNumber)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.TicketNumber)<br />
+        <b>@Html.DisplayNameFor(model => model.TicketOrigin)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.TicketOrigin)<br />
+        <b>@Html.DisplayNameFor(model => model.Title)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.Title)<br />
+        <b>@Html.DisplayNameFor(model => model.Description)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.Description)<br />
+        <b>@Html.DisplayNameFor(model => model.Visibility)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.Visibility)<br />
+        <b>@Html.DisplayNameFor(model => model.PausedComment)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.PausedComment)<br />
+        <b>@Html.DisplayNameFor(model => model.TicketChannel)&nbsp; - </b>
+        @Html.DisplayFor(modelItem => modelItem.TicketChannel)<br />
+    </div>
+
+    <br />
+
+@*}*@
+}
+
+<div>
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            <h3 style="color:cadetblue; text-align:left;">Reason of re-open:</h3>
+            @Html.EditorFor(model => model.ReopenReason, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ReopenReason, "", new { @class = "text-danger" })
+            @Html.HiddenFor(modelItem => modelItem.TicketId)
+            <input type="hidden" name="MobileNo" value=@ViewData["MobileNo"] />
+            <br />
+            <button type="submit" class="btn btn-default" data-dismiss="modal" style="font-weight:bold">Submit</button>
+        </div>
+    }
+</div>
+
+

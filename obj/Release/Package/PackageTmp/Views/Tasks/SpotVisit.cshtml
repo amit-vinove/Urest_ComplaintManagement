@@ -1,0 +1,115 @@
+﻿
+@{
+    Layout = "";
+    ViewBag.Title = "SpotVisit";
+}
+
+<head>
+    <meta name="viewport" content="width =device-width, initial-scale=1.0">
+
+    @*<link rel=”stylesheet” href=”css/bootstrap.css”>
+        <link rel=”stylesheet” href=”css/bootstrap-responsive.css”>*@
+</head>
+<body>
+
+    <div style="width:100%;">
+        <div style="margin:auto; width:200px;">
+            <br />
+            <h1 style="width:200px; text-align:center; ">Spot Visit</h1>
+            <br />
+
+            <input type="hidden" id="mobileNo" value="@ViewData["MobileNo"]" />
+
+            <div>
+                <p style=" color: beige; width: 200px; height: 30px; background-color: #f44336; text-align:center; border-radius:3px;">
+                    @*<a style="color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</a>*@
+
+                    @Html.ActionLink("Back", "GoHomePage", "Account", new
+                    {
+                        MobileNo = ViewData["MobileNo"]
+                    },
+                    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+                </p>
+            </div>
+
+            <br />
+            <div>
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 1st</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 2nd</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 3rd</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 4th</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 5th</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 6th</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 7th</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 8th</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 9th</button></div><br />
+                <div><button style="width:200px;" onclick="GetLocation()">Visit Spot 10th</button></div>
+            </div>
+            <br />
+
+            <div>
+                <p style=" color: beige; width: 200px; height: 30px; background-color: #f44336; text-align:center; border-radius:3px;">
+                    @*<a style="color: black; background-color: #f44336; font-weight: bold" href="#" onclick="history.go(-1);">Back</a>*@
+
+                    @Html.ActionLink("Back", "GoHomePage", "Account", new
+                    {
+                        MobileNo = ViewData["MobileNo"]
+                    },
+                    new { @style = "color: black; background-color: #f44336; font-weight: bold" })
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script language="javascript" type="text/javascript">
+    function GetLocation () {
+        navigator.geolocation.getCurrentPosition(showPosition, positionError);
+
+        function showPosition(position) {
+            var coordinates = position.coords;
+            //alert('Lat : ' + coordinates.latitude);
+            //alert('Long : ' + coordinates.longitude);
+
+            @*$.ajax({
+            url: "@Url.Action("SaveLocation", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+                data: { lat: coordinates.latitude, longi: coordinates.longitude },
+            success: function (Data) {
+                alert("Saved Done !");
+            }
+            });*@
+
+            saveLocation(coordinates.latitude, coordinates.longitude);
+
+        }
+
+        function positionError(position) {
+            alert('Oops ! Error: ' + position.Code);
+        }
+
+    };
+
+    function saveLocation(latitude, longitude) {
+        //alert(latitude);
+        //alert(longitude);
+
+        var mobileNo = $('#mobileNo').val();
+
+        $.ajax({
+            url: "@Url.Action("SaveLocation", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+            data: { lat: latitude, longi: longitude, MobileNo: mobileNo},
+            success: function (Data) {
+                alert("Saved Done !");
+            }
+        });
+
+        alert("OK, Done !");
+    };
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

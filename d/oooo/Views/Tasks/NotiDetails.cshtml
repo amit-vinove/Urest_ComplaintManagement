@@ -1,0 +1,185 @@
+﻿@model IEnumerable<UrestComplaintManagement.Context.Notification>
+@{
+    var notiID = "";
+    if (Model.ToList().Count > 0)
+    {
+        notiID = Model.ToList()[0].NotificationId.ToString();
+    }
+}
+<head>
+    <meta name="viewport" content="width =device-width, initial-scale=1.0">
+
+</head>
+<div>
+    <span hidden="hidden" id="notiID">@notiID</span>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Notification</h4>
+    </div>
+    <div>
+        <table id="tblNotiData" style="width:100%; color: black; background-color:cornflowerblue;">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function GetRadioValue(id) {
+        var getchecked = $('#index_' + id).val();
+        var getval = $('#index_' + id).is(":checked");
+        //alert(getchecked + id + '_' + getval);
+        if (getval) {
+            $('#Remarks_' + id).val('');
+            $('#Remarks_' + id).prop("hidden", true);
+            //$('#lRemarks_' + id).prop("hidden", true);
+
+        } else {
+            $('#Remarks_' + id).prop("hidden", false);
+            //$('#lRemarks_' + id).prop("hidden", false);
+        }
+    }
+
+    function SaveData() {
+        //alert(1);
+        var CategoryId = $('#CategoryId').val();
+        var SubCategoryId = $('#SubCategoryId').val();
+        var jsonArr = [];
+        var table = document.getElementById("tblNotiData");
+
+        var Occurance = $('#Occurance').val();
+        if (Occurance == "0")
+        { Occurance = "Weekly"; }
+        else if (Occurance == "2")
+        { Occurance = "Monthly"; }
+        else { Occurance = "Daily"; }
+
+        var transactionDate0 = "";
+        var transactionID0 = "";
+        var taskName0 = "";
+        var occurance0 = "";
+        var qustID0 = "";
+        var action0 = "";
+        var remarks0 = "";
+
+        //alert(2);
+        transactionDate0 = $('#transDt').html(); //document.getElementById("transDt").value;
+        //alert(transactionDate0);
+        taskName0 = $('#taskNameP').html();
+        occurance0 = Occurance;
+        occurance0 = occurance0.substring(0, 1);
+
+        var i = 0;
+        for (let j in table.rows) {
+            //alert(table.rows.length);
+            if (table.rows.length > i) {
+                let row = table.rows[i];
+                if (row.innerText == undefined) { i++; continue; }
+
+                //alert(document.getElementById("tblNotiData").rows[i]);
+                //alert(document.getElementById("tblNotiData").rows[i].innerHTML);
+                //alert(i + ". " + row.innerText);
+                //i++; continue;
+
+                if (i <= 3) { i++; continue; }
+
+                var getval = $('#index_' + (i - 4)).is(":checked");
+                action0 = "No";
+                if (getval) {
+                    action0 = "Yes";
+                }
+
+                qustID0 = $('#questID_' + (i - 4)).html();
+                remarks0 = $(row).find("td:eq(2) input[type='text']").val();
+                //alert("remarks row : " + i + " : " + remarks0 + ", questID : " + qustID0);
+
+                transactionID0 = $('#transactionID_' + (i - 4)).html();
+
+                //alert(i + ". TransDt: " + transactionDate0);
+                //alert(i + ". TransID: " + transactionID0);
+                //alert(i + ". CatID: " + CategoryId);
+                //alert(i + ". SCatID: " + SubCategoryId);
+                //alert(i + ". Task: " + taskName0);
+                //alert(i + ". QuestID: " + qustID0);
+                //alert(i + ". Occ: " + occurance0);
+                //alert(i + ". Action: " + action0);
+                //alert(i + ". Remarks: " + remarks0);
+
+                //alert(jsonArr);
+
+                jsonArr.push({
+                    TransactionDate: transactionDate0,
+                    TransactionID: transactionID0,
+                    CategoryID: CategoryId,
+                    SubCategoryID: SubCategoryId,
+                    TaskName: taskName0,
+                    QuestID: qustID0,
+                    Occurance: occurance0,
+                    Action: action0,
+                    Remarks: remarks0
+                });
+                //alert(i + ". Data Arr: " + jsonArr);
+
+                //    for (let j in row.cells) {
+                //        let col = row.cells[j]
+                //    }
+
+                // alert("row: " + i + ' end');
+                i++;
+            }
+        };
+
+        //alert("Data : " + jsonArr);
+
+        $.ajax({
+            url: "@Url.Action("SaveTaskWiseTran", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+            data: { taskWiseTransaction: jsonArr },
+            success: function (Data) {
+                alert("Saved Done !");
+            }
+        });
+
+        alert("Saved !");
+        //$("#tblNotiData").attr("hidden", true);
+        $('#partialModal').modal('hide');
+    }
+
+    $(document).ready(function LoadQuest() {
+        var notiID = $('#notiID').html();
+
+        $("#tblNotiData tbody tr").remove();
+
+        if (notiID.length = 0) { notiID = 0; }
+
+        var urlLink = "@Url.Action("NotificationData", "Tasks")";
+
+        $.ajax({
+            url: urlLink,
+            type: "POST",
+            dataType: "JSON",
+            data: { notiID: notiID },
+            success: function (Data) {
+                var date = new Date(Data[0].CreatedOn);
+                //var dtDay = date.getDate();
+                //var dtMonth = date.getMonth + 1;
+                //var dtYear = date.getFullYear;
+
+                //alert(dtDay + '-' + dtMonth + '-' + dtYear);
+                //alert(Date(Data[0].CreatedOn));
+
+                var dateCr = Data[0].CrOnStr;
+                var dateEx = Data[0].ExDtStr;
+
+                //alert(dateCr);
+
+                $('#tblNotiData tbody').append('<tr style="border:single; width:100%" ><td style="width:10%;">Date</td><td style="width:5%;">:</td><td style="width:75%;" id="notiDate">' + dateCr + '</td></tr>');
+                $('#tblNotiData tbody').append('<tr><td><div style="height:20px; width:10px;" ></div></td></tr>');
+                $('#tblNotiData tbody').append('<tr style="border:single" ><td>Subject</td><td>:</td><td colspan="2" id="notiSubject">' + Data[0].Subject + '</td></tr>');
+                $('#tblNotiData tbody').append('<tr style="border:single" ><td>Message</td><td>:</td><td><div style="overflow:auto; word-wrap: break-word; height:aboslute; scrollbar:none;" id="notiMessage">' + Data[0].Message + '</div></td></tr>');
+                $('#tblNotiData tbody').append('<tr style="border-bottom: solid; border-width: 1px; border-color: black;"><td>Expiry</td><td>:</td><td id="notiExpiry">' + dateEx + '</td></tr>');
+            }
+        });
+    });
+</script>

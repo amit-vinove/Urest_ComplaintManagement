@@ -1,0 +1,291 @@
+﻿
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+<head>
+    <meta name="viewport" content="width =device-width, initial-scale=1.0">
+
+    @*<link rel=”stylesheet” href=”css/bootstrap.css”>
+        <link rel=”stylesheet” href=”css/bootstrap-responsive.css”>*@
+
+</head>
+
+@model IEnumerable<UrestComplaintManagement.Context.TaskWiseQuestionnaire>
+@{
+    //Layout = "";
+    var taskID = "";
+    var transDt = "";
+    if (Model.ToList().Count > 0)
+    {
+        taskID = Model.ToList()[0].TaskID.ToString();
+        transDt = Model.ToList()[0].TransDate.ToString();
+    }
+}
+<div>
+    <span hidden="hidden" id="taskID">@taskID</span>
+    <span hidden="hidden" id="transDt">@transDt</span>
+    @*<div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">Task Details</h4>
+        </div>*@
+
+    <br />
+    <div>
+        <table id="tblDataQuestP" style="color: black; background-color:cornflowerblue;">
+            <thead>
+                <tr style="border: solid; border-width: 1px; border-color: black;">
+                    <th style="width:auto;">
+                        Questionnaire
+                    </th>
+                    <th style="width:auto;">
+                        Action
+                    </th>
+                    <th style="width:auto; text-align:left;">
+                        Remarks
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var Counter = Model.Count();
+                    var i = 0;
+                }
+                @foreach (var item in Model)
+                {
+                    var CategoryName = item.CategoryName + ' ' + item.SubCategoryName;
+
+                    var butCaption = "Submit";
+                    var TransID = item.TransactionID;
+                    if (TransID > 0) { butCaption = "Update"; }
+
+                    <tr style="border:single"><td>Category / SubCategory :</td><td colspan="2" id="category">@CategoryName</td></tr>
+                    <tr style="border:single"><td>Task :</td><td colspan="2"><div style="overflow:auto; word-wrap: break-word; height:aboslute; width:auto; scrollbar:none;" id="taskNameP">@item.TaskName</div></td></tr>
+                    <tr style="border-bottom: solid; border-width: 1px; border-color: black;"><td>Occurance :</td><td id="occurance">@item.Occurance</td><td style="text-align:right; color:black;"><button style="width:100px; background-color: darkgreen; color:white;" onclick="SaveData()">@butCaption</button></td></tr>
+
+                    break;
+                }
+
+                @foreach (var item in Model)
+                {
+                    if (item.Action == "No")
+                    {
+                        <tr style="border-bottom: solid; border-width: 1px; border-color: black;"><td><div style="overflow:auto; word-wrap: break-word; height:aboslute; width:100px; scrollbar:none;">@item.QuestionName</div><span hidden="hidden" id="questID_@i">@item.QuestID</span></td><td><input id="index_@i'" name="Gender_@i" type="radio" value="Yes" onChange="GetRadioValue(@i)" /> Y <input checked="checked" id="index_@i" name="Gender_@i" type="radio" value="No" onChange="GetRadioValue(@i)" /> N</td><td style="text-align:right"><input id="Remarks_@i" type="text" style="width:160px; color:black;" value=@item.Remarks><span hidden="hidden" id="transactionID_@i">@item.TransactionID</span></td></tr>
+                    }
+                    else
+                    {
+                        <tr style="border-bottom: solid; border-width: 1px; border-color: black;"><td><div style="overflow:auto; word-wrap: break-word; height:aboslute; width:100px; scrollbar: none;">@item.QuestionName</div><span hidden="hidden" id="questID_@i">@item.QuestID</span></td><td><input checked="checked" id="index_@i" name="Gender_@i" type="radio" value="Yes" onChange="GetRadioValue(@i)" /> Y <input id="index_@i" name="Gender_@i" type="radio" value="No" onChange="GetRadioValue(@i)" /> N</td><td style="text-align:right"><input id="Remarks_@i" type="text" hidden="true" style="width:160px; color:black;" value=@item.Remarks><span hidden="hidden" id="transactionID_@i">@item.TransactionID</span></td></tr>
+                    }
+
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    @*<button onclick="gototasklist()" style="width:100px; float:right; color:gray"  >Close</button>*@
+
+    <div style="float:right; vertical-align:central;">
+        <p style="color: beige; width: 100px; height: 30px; background-color: gray; text-align: center; border-radius: 5px;">
+            @Html.ActionLink("Close", "TaskList", "Tasks", new
+               {
+                   MobileNo = ViewData["MobileNo"]
+               },
+                 new { @style = "color: black; background-color: gray; font-weight: bold" })
+        </p>
+    </div>
+
+
+
+    <br />
+    <hr />
+</div>
+
+<script>
+    function gototasklist() {
+         document.location =
+        '@Url.Action("TaskTransaction", "Tasks")'
+    }
+
+    function GetRadioValue(id) {
+        var getchecked = $('#index_' + id).val();
+        var getval = $('#index_' + id).is(":checked");
+        //alert(getchecked + id + '_' + getval);
+        if (getval) {
+            $('#Remarks_' + id).val('');
+            $('#Remarks_' + id).prop("hidden", true);
+            //$('#lRemarks_' + id).prop("hidden", true);
+
+        } else {
+            $('#Remarks_' + id).prop("hidden", false);
+            //$('#lRemarks_' + id).prop("hidden", false);
+        }
+    }
+
+    function SaveData() {
+        //alert(1);
+        var CategoryId = $('#CategoryId').val();
+        var SubCategoryId = $('#SubCategoryId').val();
+        var jsonArr = [];
+        var table = document.getElementById("tblDataQuestP");
+
+        var Occurance = $('#Occurance').val();
+        if (Occurance == "0")
+        { Occurance = "Weekly"; }
+        else if (Occurance == "2")
+        { Occurance = "Monthly"; }
+        else { Occurance = "Daily"; }
+
+        var transactionDate0 = "";
+        var transactionID0 = "";
+        var taskName0 = "";
+        var occurance0 = "";
+        var qustID0 = "";
+        var action0 = "";
+        var remarks0 = "";
+
+        //alert(2);
+        transactionDate0 = $('#transDt').html(); //document.getElementById("transDt").value;
+        //alert(transactionDate0);
+        taskName0 = $('#taskNameP').html();
+        occurance0 = Occurance;
+        occurance0 = occurance0.substring(0, 1);
+
+        var i = 0;
+        for (let j in table.rows) {
+            //alert(table.rows.length);
+            if (table.rows.length > i) {
+                let row = table.rows[i];
+                if (row.innerText == undefined) { i++; continue; }
+
+                //alert(document.getElementById("tblDataQuestP").rows[i]);
+                //alert(document.getElementById("tblDataQuestP").rows[i].innerHTML);
+                //alert(i + ". " + row.innerText);
+                //i++; continue;
+
+                if (i <= 3) { i++; continue; }
+
+                var getval = $('#index_' + (i - 4)).is(":checked");
+                action0 = "No";
+                if (getval) {
+                    action0 = "Yes";
+                }
+
+                qustID0 = $('#questID_' + (i - 4)).html();
+                remarks0 = $(row).find("td:eq(2) input[type='text']").val();
+                //alert("remarks row : " + i + " : " + remarks0 + ", questID : " + qustID0);
+
+                transactionID0 = $('#transactionID_' + (i - 4)).html();
+
+                //alert(i + ". TransDt: " + transactionDate0);
+                //alert(i + ". TransID: " + transactionID0);
+                //alert(i + ". CatID: " + CategoryId);
+                //alert(i + ". SCatID: " + SubCategoryId);
+                //alert(i + ". Task: " + taskName0);
+                //alert(i + ". QuestID: " + qustID0);
+                //alert(i + ". Occ: " + occurance0);
+                //alert(i + ". Action: " + action0);
+                //alert(i + ". Remarks: " + remarks0);
+
+                //alert(jsonArr);
+
+                jsonArr.push({
+                    TransactionDate: transactionDate0,
+                    TransactionID: transactionID0,
+                    CategoryID: CategoryId,
+                    SubCategoryID: SubCategoryId,
+                    TaskName: taskName0,
+                    QuestID: qustID0,
+                    Occurance: occurance0,
+                    Action: action0,
+                    Remarks: remarks0
+                });
+                //alert(i + ". Data Arr: " + jsonArr);
+
+                //    for (let j in row.cells) {
+                //        let col = row.cells[j]
+                //    }
+
+                // alert("row: " + i + ' end');
+                i++;
+            }
+        };
+
+        //alert("Data : " + jsonArr);
+
+        $.ajax({
+            url: "@Url.Action("SaveTaskWiseTran", "Tasks")",
+            type: "POST",
+            dataType: "JSON",
+            data: { taskWiseTransaction: jsonArr },
+            success: function (Data) {
+                alert("Saved Done !");
+            }
+        });
+
+        alert("Saved !");
+        //$("#tblDataQuestP").attr("hidden", true);
+        $('#partialModal').modal('hide');
+    }
+
+    $(document).ready(function LoadQuest() {
+        var taskID = $('#taskID').html();
+        var QRCode = "";
+
+        $("#tblDataQuestP tbody tr").remove();
+        var CategoryId = $('#CategoryId').val();
+        var SubCategoryId = $('#SubCategoryId').val();
+
+        var Occurance = $('#Occurance').val();
+        if (Occurance == "0") { Occurance = "Weekly"; } else { Occurance = "Daily"; }
+
+        //alert(QRCode, + ', ' + taskID.length);
+        if (taskID.length = 0) { taskID = 0; }
+
+        var urlLink = "@Url.Action("DataQuestions", "Tasks")";
+
+        $.ajax({
+            url: urlLink,
+            type: "POST",
+            dataType: "JSON",
+            data: { taskID: taskID, QRCode: QRCode },
+            success: function (Data) {
+                var Counter = Data.length;
+                var CategoryName = Data[0].CategoryName + ' ' + Data[0].SubCategoryName;
+
+                var butCaption = "Submit";
+                var TransID = Data[0].TransactionID;
+                if (TransID > 0) { butCaption = "Update"; }
+
+                $('#tblDataQuestP tbody').append('<tr style="border:single" ><td>Category / SubCategory :</td><td colspan="2" id="category">' + CategoryName + '</td></tr>');
+                $('#tblDataQuestP tbody').append('<tr style="border:single" ><td>Task :</td><td colspan="2"><div style="overflow:auto; word-wrap: break-word; height:aboslute; width:auto; scrollbar:none;" id="taskNameP">' + Data[0].TaskName + '</div></td></tr>');
+                $('#tblDataQuestP tbody').append('<tr style="border-bottom: solid; border-width: 1px; border-color: black;"><td>Occurance :</td><td id="occurance">' + Occurance + '</td><td style="text-align:right; color:black;"><button style="width:100px; background-color: darkgreen; color:white;" onclick="SaveData()">' + butCaption + '</button></td></tr>');
+
+                for (i = 0; i < Counter; i++) {
+                    var
+                        QuestionName = Data[i].QuestionName;
+                    TaskName = Data[i].TaskName;
+                    QuestID = Data[i].QuestID;
+                    Action = Data[i].Action;
+                    Remarks = Data[i].Remarks;
+                    TransactionID = Data[i].TransactionID;
+                    //alert(Data[i].TransactionID);
+                    var butCaption = "Submit";
+                    if (TransactionID > 0) { butCaption = "Update"; }
+
+                    if (Action == "No") {
+                        var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: black;" ><td><div style="overflow:auto; word-wrap: break-word; height:aboslute; width:100px; scrollbar:none;">' + QuestionName + '</div><span  hidden="hidden" id="questID_' + i + '">' + QuestID + '</span></td><td><input id="index_' + i + '" name="Gender' + i + '" type="radio" value="Yes"  onChange="GetRadioValue(' + i + ')" /> Y <input  checked="checked" id="index_' + i + '" name="Gender' + i + '" type="radio" value="No"  onChange="GetRadioValue(' + i + ')" /> N</td><td style="text-align:right"><input id="Remarks_' + i + '" type="text" style="width:160px; color:black;" value=' + Remarks + '><span hidden="hidden" id="transactionID_' + i + '">' + TransactionID + '</span></td></tr>';
+                    }
+                    else {
+                        var transaction = '<tr style="border-bottom: solid; border-width: 1px; border-color: black;" ><td><div style="overflow:auto; word-wrap: break-word; height:aboslute; width:100px; scrollbar:none;">' + QuestionName + '</div><span  hidden="hidden" id="questID_' + i + '">' + QuestID + '</span></td><td><input checked="checked" id="index_' + i + '" name="Gender' + i + '" type="radio" value="Yes"  onChange="GetRadioValue(' + i + ')" /> Y <input  id="index_' + i + '" name="Gender' + i + '" type="radio" value="No"  onChange="GetRadioValue(' + i + ')" /> N</td><td style="text-align:right"><input id="Remarks_' + i + '" type="text" hidden="true" style="width:160px; color:black;" value=' + Remarks + '><span hidden="hidden" id="transactionID_' + i + '">' + TransactionID + '</span></td></tr>';
+                    }
+
+                    $('#tblDataQuestP tbody').append(transaction);
+
+                }
+
+            }
+        });
+        //$("#tblDataQuest").attr("hidden", false);
+        //$("#taskDetailPopup").attr("hidden", false);
+        //$("#divPageContent").addClass("disabledbutton");
+    });
+</script>
